@@ -6,41 +6,232 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>VEXORA - Your Social World</title>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
 <style>
 *{box-sizing:border-box}
-body{margin:0;background:#080808;color:#fff;font-family:Arial,sans-serif}
-header{padding:18px;text-align:center;border-bottom:1px solid #302719}
-header h1{margin:0;color:#e6bd63;letter-spacing:7px}
-.logo{font-size:42px;color:#e6bd63;font-weight:900}
-.container{max-width:650px;margin:25px auto;padding:15px}
-.card{background:#111;border:1px solid #383020;border-radius:16px;padding:20px;margin-bottom:18px}
-h2{color:#e6bd63;margin-top:0}
-input,textarea{width:100%;padding:13px;margin:7px 0;background:#090909;border:1px solid #39332a;border-radius:9px;color:white;font-size:15px}
-textarea{resize:vertical;min-height:75px}
-button{width:100%;padding:14px;margin-top:12px;border:0;border-radius:9px;background:linear-gradient(100deg,#a87924,#f0d17a);font-weight:bold;font-size:15px;cursor:pointer}
-.secondary{background:#29251d;color:#e6bd63}
+
+body{
+ margin:0;
+ background:#080808;
+ color:#fff;
+ font-family:Arial,sans-serif;
+ padding-bottom:85px;
+}
+
+header{
+ padding:18px;
+ text-align:center;
+ border-bottom:1px solid #302719;
+}
+
+header h1{
+ margin:0;
+ color:#e6bd63;
+ letter-spacing:7px;
+}
+
+.logo{
+ font-size:42px;
+ color:#e6bd63;
+ font-weight:900;
+}
+
+.container{
+ max-width:650px;
+ margin:20px auto;
+ padding:15px;
+}
+
+.card{
+ background:#111;
+ border:1px solid #383020;
+ border-radius:16px;
+ padding:20px;
+ margin-bottom:18px;
+}
+
+h2{
+ color:#e6bd63;
+ margin-top:0;
+}
+
+input,textarea{
+ width:100%;
+ padding:13px;
+ margin:7px 0;
+ background:#090909;
+ border:1px solid #39332a;
+ border-radius:9px;
+ color:white;
+ font-size:15px;
+}
+
+textarea{
+ resize:vertical;
+ min-height:75px;
+}
+
+button{
+ width:100%;
+ padding:14px;
+ margin-top:12px;
+ border:0;
+ border-radius:9px;
+ background:linear-gradient(100deg,#a87924,#f0d17a);
+ font-weight:bold;
+ font-size:15px;
+ cursor:pointer;
+}
+
+button:disabled{
+ opacity:.5;
+ cursor:not-allowed;
+}
+
+.secondary{
+ background:#29251d;
+ color:#e6bd63;
+}
+
 #app{display:none}
-#message{color:#e6bd63;font-size:14px;margin-top:12px}
+
+#message{
+ color:#e6bd63;
+ font-size:14px;
+ margin-top:12px;
+}
+
 .profile{text-align:center}
-.avatar{width:120px;height:120px;border-radius:50%;object-fit:cover;border:3px solid #d6aa48;background:#222}
-.small{font-size:12px;color:#999}
-.post{border-bottom:1px solid #383020;padding:15px 0}
+
+.avatar{
+ width:120px;
+ height:120px;
+ border-radius:50%;
+ object-fit:cover;
+ border:3px solid #d6aa48;
+ background:#222;
+}
+
+.small{
+ font-size:12px;
+ color:#999;
+}
+
+.post{
+ border-bottom:1px solid #383020;
+ padding:15px 0;
+}
+
 .post:last-child{border-bottom:0}
-.post-head{display:flex;align-items:center;gap:10px;margin-bottom:10px}
-.post-avatar{width:42px;height:42px;border-radius:50%;object-fit:cover;background:#222}
-.post-name{font-weight:bold;color:#e6bd63}
-.post-media{width:100%;max-height:550px;object-fit:contain;border-radius:10px;background:#080808;margin-top:10px}
-.post-text{white-space:pre-wrap;overflow-wrap:anywhere}
-.post-date{font-size:11px;color:#888;margin-top:8px}
-label{display:block;margin-top:10px}
-.nav-item.active{color:#e6bd63}
-#app{padding-bottom:85px}
+
+.post-head{
+ display:flex;
+ align-items:center;
+ gap:10px;
+ margin-bottom:10px;
+}
+
+.post-avatar{
+ width:42px;
+ height:42px;
+ border-radius:50%;
+ object-fit:cover;
+ background:#222;
+}
+
+.post-name{
+ font-weight:bold;
+ color:#e6bd63;
+}
+
+.post-media{
+ width:100%;
+ max-height:550px;
+ object-fit:contain;
+ border-radius:10px;
+ background:#080808;
+ margin-top:10px;
+}
+
+.post-text{
+ white-space:pre-wrap;
+ overflow-wrap:anywhere;
+}
+
+.post-date{
+ font-size:11px;
+ color:#888;
+ margin-top:8px;
+}
+
+label{
+ display:block;
+ margin-top:10px;
+}
+
 .page{display:none}
 .page.active{display:block}
 
+.bottom-nav{
+ position:fixed;
+ bottom:0;
+ left:0;
+ right:0;
+ z-index:1000;
+ display:flex;
+ justify-content:space-around;
+ align-items:center;
+ background:#101010;
+ border-top:1px solid #493a20;
+ padding:8px 3px;
+ padding-bottom:calc(8px + env(safe-area-inset-bottom));
+}
+
+.nav-item{
+ width:20%;
+ margin:0;
+ padding:5px 2px;
+ background:transparent;
+ color:#999;
+ border-radius:8px;
+ font-size:11px;
+ font-weight:normal;
+ box-shadow:none;
+}
+
+.nav-item span{
+ display:block;
+ font-size:23px;
+ margin-bottom:4px;
+}
+
+.nav-item.active{
+ color:#e6bd63;
+ background:#211b10;
+}
+
+.empty-state{
+ text-align:center;
+ padding:35px 15px;
+ color:#aaa;
+ line-height:1.7;
+}
+
+.empty-state .symbol{
+ font-size:38px;
+ color:#e6bd63;
+}
+
+@media(max-width:400px){
+ .nav-item{font-size:10px}
+ .nav-item span{font-size:21px}
+ .card{padding:16px}
+}
 </style>
 </head>
+
 <body>
+
 <header>
  <div class="logo">V</div>
  <h1>VEXORA</h1>
@@ -48,18 +239,79 @@ label{display:block;margin-top:10px}
 </header>
 
 <div class="container">
- <section class="card" id="auth">
-  <h2>VEXORA'ya Katıl</h2>
-  <input id="fullname" placeholder="Adın ve soyadın">
-  <input id="username" placeholder="Kullanıcı adın">
-  <input id="email" type="email" placeholder="E-posta adresin">
-  <input id="password" type="password" placeholder="Şifren (en az 8 karakter)">
-  <button onclick="signup()">Ücretsiz Hesap Oluştur</button>
-  <button class="secondary" onclick="login()">Giriş Yap</button>
-  <div id="authMessage"></div>
- </section>
 
- <section id="app">
+<section class="card" id="auth">
+ <h2>VEXORA'ya Katıl</h2>
+
+ <input id="fullname" placeholder="Adın ve soyadın">
+ <input id="username" placeholder="Kullanıcı adın">
+ <input id="email" type="email" placeholder="E-posta adresin">
+ <input id="password" type="password" placeholder="Şifren (en az 8 karakter)">
+
+ <button onclick="signup()">Ücretsiz Hesap Oluştur</button>
+ <button class="secondary" onclick="login()">Giriş Yap</button>
+
+ <div id="authMessage"></div>
+</section>
+
+<section id="app">
+
+ <!-- ANA SAYFA -->
+ <div class="page active" id="homePage">
+  <div class="card">
+   <h2>VEXORA Akışı</h2>
+   <div id="feedMessage" class="small">Paylaşımlar yükleniyor...</div>
+   <div id="feed"></div>
+   <button class="secondary" onclick="loadFeed()">Akışı Yenile</button>
+  </div>
+ </div>
+
+ <!-- KEŞFET -->
+ <div class="page" id="explorePage">
+  <div class="card">
+   <h2>Keşfet</h2>
+   <div class="empty-state">
+    <div class="symbol">⌕</div>
+    <h3>Yeni dünyalar keşfet!</h3>
+    <p>Keşfet bölümü hazırlanıyor.</p>
+    <p>Yakında yeni kullanıcıları ve popüler paylaşımları burada bulabileceksin.</p>
+   </div>
+  </div>
+ </div>
+
+ <!-- PAYLAŞ -->
+ <div class="page" id="sharePage">
+  <div class="card">
+   <h2>Yeni Paylaşım</h2>
+
+   <textarea id="postContent" maxlength="2000"
+   placeholder="Aklından neler geçiyor?"></textarea>
+
+   <label class="small">Fotoğraf veya video seç</label>
+   <input id="postFile" type="file" accept="image/*,video/*">
+
+   <p class="small">En fazla 50 MB dosya yükleyebilirsin.</p>
+
+   <button id="shareButton" onclick="createPost()">Paylaş</button>
+   <div id="postMessage"></div>
+  </div>
+ </div>
+
+ <!-- MESAJLAR -->
+ <div class="page" id="messagesPage">
+  <div class="card">
+   <h2>Mesajlar</h2>
+   <div class="empty-state">
+    <div class="symbol">✉</div>
+    <h3>Mesajlaşma yakında!</h3>
+    <p>Yakında VEXORA kullanıcılarıyla özel mesajlaşabileceksin.</p>
+   </div>
+  </div>
+ </div>
+
+ <!-- PROFİL -->
+ <div class="page" id="profilePage">
+
   <div class="card profile">
    <img id="avatar" class="avatar" alt="Profil fotoğrafı">
    <h2 id="displayName">VEXORA Kullanıcısı</h2>
@@ -69,99 +321,129 @@ label{display:block;margin-top:10px}
 
   <div class="card">
    <h2>Profilini Düzenle</h2>
+
    <label class="small">Profil fotoğrafın</label>
    <input id="avatarFile" type="file" accept="image/*">
+
    <label class="small">Adın ve soyadın</label>
    <input id="editFullname" placeholder="Adın ve soyadın">
+
    <label class="small">Kullanıcı adın</label>
    <input id="editUsername" placeholder="Kullanıcı adın">
+
    <label class="small">Biyografin</label>
-   <textarea id="editBio" maxlength="250" placeholder="Kendinden bahset..."></textarea>
+   <textarea id="editBio" maxlength="250"
+   placeholder="Kendinden bahset..."></textarea>
+
    <button onclick="saveProfile()">Profili Kaydet</button>
    <div id="profileMessage"></div>
   </div>
 
-  <div class="card">
-   <h2>Yeni Paylaşım</h2>
-   <textarea id="postContent" maxlength="2000" placeholder="Aklından neler geçiyor?"></textarea>
-   <label class="small">Fotoğraf veya video seç</label>
-   <input id="postFile" type="file" accept="image/*,video/*">
-   <p class="small">En fazla 50 MB dosya yükleyebilirsin.</p>
-   <button id="shareButton" onclick="createPost()">Paylaş</button>
-   <div id="postMessage"></div>
-  </div>
-
-  <div class="card">
-   <h2>VEXORA Akışı</h2>
-   <div id="feedMessage" class="small">Paylaşımlar yükleniyor...</div>
-   <div id="feed"></div>
-   <button class="secondary" onclick="loadFeed()">Akışı Yenile</button>
-  </div>
-
   <button class="secondary" onclick="logout()">Çıkış Yap</button>
-  <nav class="bottom-nav">
- <button class="nav-item active" onclick="openTab('home',this)">
-  <span>⌂</span>Ana Sayfa
- </button>
- <button class="nav-item" onclick="openTab('explore',this)">
-  <span>⌕</span>Keşfet
- </button>
- <button class="nav-item" onclick="openTab('share',this)">
-  <span>＋</span>Paylaş
- </button>
- <button class="nav-item" onclick="openTab('messages',this)">
-  <span>✉</span>Mesajlar
- </button>
- <button class="nav-item" onclick="openTab('profile',this)">
-  <span>♙</span>Profil
- </button>
-</nav>
- </section>
+ </div>
 
- <p class="small" style="text-align:center">© 2026 VEXORA · Sosyal dünyanın yeni adresi</p>
+ <!-- ALT MENÜ -->
+ <nav class="bottom-nav">
+
+  <button class="nav-item active" onclick="openTab('home',this)">
+   <span>⌂</span>Ana Sayfa
+  </button>
+
+  <button class="nav-item" onclick="openTab('explore',this)">
+   <span>⌕</span>Keşfet
+  </button>
+
+  <button class="nav-item" onclick="openTab('share',this)">
+   <span>＋</span>Paylaş
+  </button>
+
+  <button class="nav-item" onclick="openTab('messages',this)">
+   <span>✉</span>Mesajlar
+  </button>
+
+  <button class="nav-item" onclick="openTab('profile',this)">
+   <span>♙</span>Profil
+  </button>
+
+ </nav>
+
+</section>
+
+<p class="small" style="text-align:center">
+ © 2026 VEXORA · Sosyal dünyanın yeni adresi
+</p>
+
 </div>
-function openTab(tab,button){
- document.querySelectorAll(".nav-item").forEach(item=>{
-  item.classList.remove("active");
- });
- button.classList.add("active");
 
- if(tab==="home"){
-  document.getElementById("feed").scrollIntoView({behavior:"smooth"});
- }
- if(tab==="explore"){
-  alert("Keşfet sayfasını birazdan kuracağız!");
- }
- if(tab==="share"){
-  document.getElementById("postContent").scrollIntoView({behavior:"smooth"});
- }
- if(tab==="messages"){
-  alert("Mesajlar sayfasını birazdan kuracağız!");
- }
- if(tab==="profile"){
-  document.querySelector(".profile").scrollIntoView({behavior:"smooth"});
- }
-}
 <script>
 const SUPABASE_URL = "https://coyobsmidxswejusrnca.supabase.co";
 const SUPABASE_KEY = "sb_publishable_ePwGpBQ3VJEeTer_FVtRQQ_AMEXlHhF";
 
-const client = window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
+const client = window.supabase.createClient(
+ SUPABASE_URL,
+ SUPABASE_KEY
+);
+
 let currentUser = null;
+let currentTab = "home";
+
+/* SAYFA GEÇİŞLERİ */
+
+function openTab(tab,button){
+ const pages = {
+  home:"homePage",
+  explore:"explorePage",
+  share:"sharePage",
+  messages:"messagesPage",
+  profile:"profilePage"
+ };
+
+ if(!pages[tab])return;
+
+ document.querySelectorAll(".page").forEach(page=>{
+  page.classList.remove("active");
+ });
+
+ document.getElementById(pages[tab]).classList.add("active");
+
+ document.querySelectorAll(".nav-item").forEach(item=>{
+  item.classList.remove("active");
+ });
+
+ if(button){
+  button.classList.add("active");
+ }else{
+  const buttons=document.querySelectorAll(".nav-item");
+  const index=["home","explore","share","messages","profile"].indexOf(tab);
+  if(buttons[index])buttons[index].classList.add("active");
+ }
+
+ currentTab=tab;
+ window.scrollTo({top:0,behavior:"smooth"});
+}
+
+/* MESAJ GÖSTERME */
 
 function message(id,text){
  document.getElementById(id).textContent=text;
 }
 
+/* UYGULAMAYI GÖSTER */
+
 function showApp(user){
  currentUser=user;
+
  document.getElementById("auth").style.display=user?"none":"block";
  document.getElementById("app").style.display=user?"block":"none";
+
  if(user){
+  openTab("home");
   loadProfile();
   loadFeed();
  }
 }
+
+/* KAYIT */
 
 async function signup(){
  const fullname=document.getElementById("fullname").value.trim();
@@ -173,10 +455,12 @@ async function signup(){
   message("authMessage","Bütün alanları doldur.");
   return;
  }
+
  if(password.length<8){
   message("authMessage","Şifre en az 8 karakter olmalı.");
   return;
  }
+
  if(!/^[a-zA-Z0-9_]+$/.test(username)){
   message("authMessage","Kullanıcı adında yalnızca harf, rakam ve _ kullan.");
   return;
@@ -185,10 +469,14 @@ async function signup(){
  message("authMessage","Hesabın oluşturuluyor...");
 
  const {data,error}=await client.auth.signUp({
-  email,password,
+  email,
+  password,
   options:{
    emailRedirectTo:location.origin+location.pathname,
-   data:{username,full_name:fullname}
+   data:{
+    username,
+    full_name:fullname
+   }
   }
  });
 
@@ -196,12 +484,15 @@ async function signup(){
   message("authMessage","Hata: "+error.message);
   return;
  }
+
  if(data.session){
   showApp(data.session.user);
  }else{
   message("authMessage","Kayıt başarılı! E-postanı doğrula, ardından giriş yap.");
  }
 }
+
+/* GİRİŞ */
 
 async function login(){
  const email=document.getElementById("email").value.trim();
@@ -213,26 +504,35 @@ async function login(){
  }
 
  message("authMessage","Giriş yapılıyor...");
- const {data,error}=await client.auth.signInWithPassword({email,password});
+
+ const {data,error}=await client.auth.signInWithPassword({
+  email,
+  password
+ });
 
  if(error){
   message("authMessage","Giriş hatası: "+error.message);
   return;
  }
+
  showApp(data.user);
 }
+
+/* PROFİLİ YÜKLE */
 
 async function loadProfile(){
  if(!currentUser)return;
 
  const {data,error}=await client.from("profiles")
   .select("username,full_name,bio,avatar_url")
-  .eq("id",currentUser.id).maybeSingle();
+  .eq("id",currentUser.id)
+  .maybeSingle();
 
  if(error){
   message("profileMessage","Profil yüklenemedi: "+error.message);
   return;
  }
+
  if(!data){
   message("profileMessage","Profil kaydı bulunamadı.");
   return;
@@ -241,11 +541,16 @@ async function loadProfile(){
  document.getElementById("editFullname").value=data.full_name||"";
  document.getElementById("editUsername").value=data.username||"";
  document.getElementById("editBio").value=data.bio||"";
+
  document.getElementById("displayName").textContent=data.full_name||"VEXORA Kullanıcısı";
  document.getElementById("displayUsername").textContent=data.username?"@"+data.username:"";
  document.getElementById("displayBio").textContent=data.bio||"";
- document.getElementById("avatar").src=data.avatar_url||"https://placehold.co/200x200/171717/e6bd63?text=V";
+
+ document.getElementById("avatar").src=
+  data.avatar_url||"https://placehold.co/200x200/171717/e6bd63?text=V";
 }
+
+/* PROFİLİ KAYDET */
 
 async function saveProfile(){
  if(!currentUser)return;
@@ -259,12 +564,14 @@ async function saveProfile(){
   message("profileMessage","Ad ve kullanıcı adı boş bırakılamaz.");
   return;
  }
+
  if(!/^[a-zA-Z0-9_]+$/.test(username)){
   message("profileMessage","Kullanıcı adında yalnızca harf, rakam ve _ kullan.");
   return;
  }
 
  message("profileMessage","Profil kaydediliyor...");
+
  let avatarUrl=null;
 
  if(file){
@@ -272,6 +579,7 @@ async function saveProfile(){
    message("profileMessage","Lütfen bir resim dosyası seç.");
    return;
   }
+
   if(file.size>5*1024*1024){
    message("profileMessage","Fotoğraf en fazla 5 MB olabilir.");
    return;
@@ -292,11 +600,17 @@ async function saveProfile(){
   avatarUrl=urlData.publicUrl;
  }
 
- const updates={full_name:fullname,username:username,bio:bio};
+ const updates={
+  full_name:fullname,
+  username:username,
+  bio:bio
+ };
+
  if(avatarUrl)updates.avatar_url=avatarUrl;
 
  const {error}=await client.from("profiles")
-  .update(updates).eq("id",currentUser.id);
+  .update(updates)
+  .eq("id",currentUser.id);
 
  if(error){
   message("profileMessage","Kaydetme hatası: "+error.message);
@@ -304,9 +618,13 @@ async function saveProfile(){
  }
 
  document.getElementById("avatarFile").value="";
+
  message("profileMessage","Profilin başarıyla kaydedildi!");
+
  await loadProfile();
 }
+
+/* YENİ PAYLAŞIM */
 
 async function createPost(){
  if(!currentUser)return;
@@ -324,6 +642,7 @@ async function createPost(){
    message("postMessage","Yalnızca fotoğraf veya video yükleyebilirsin.");
    return;
   }
+
   if(file.size>50*1024*1024){
    message("postMessage","Dosya en fazla 50 MB olabilir.");
    return;
@@ -331,8 +650,10 @@ async function createPost(){
  }
 
  const button=document.getElementById("shareButton");
+
  button.disabled=true;
  button.textContent="Paylaşılıyor...";
+
  message("postMessage","Paylaşım hazırlanıyor...");
 
  let imageUrl=null;
@@ -350,8 +671,11 @@ async function createPost(){
 
    const {data:urlData}=client.storage.from("posts").getPublicUrl(path);
 
-   if(file.type.startsWith("image/"))imageUrl=urlData.publicUrl;
-   else videoUrl=urlData.publicUrl;
+   if(file.type.startsWith("image/")){
+    imageUrl=urlData.publicUrl;
+   }else{
+    videoUrl=urlData.publicUrl;
+   }
   }
 
   const {error}=await client.from("posts").insert({
@@ -365,8 +689,12 @@ async function createPost(){
 
   document.getElementById("postContent").value="";
   document.getElementById("postFile").value="";
+
   message("postMessage","Paylaşımın başarıyla yayınlandı!");
+
   await loadFeed();
+
+  openTab("home");
 
  }catch(error){
   message("postMessage","Paylaşım hatası: "+error.message);
@@ -376,10 +704,13 @@ async function createPost(){
  }
 }
 
+/* PAYLAŞIM AKIŞI */
+
 async function loadFeed(){
  if(!currentUser)return;
 
  const feed=document.getElementById("feed");
+
  message("feedMessage","Paylaşımlar yükleniyor...");
  feed.replaceChildren();
 
@@ -399,15 +730,20 @@ async function loadFeed(){
  }
 
  const userIds=[...new Set(posts.map(p=>p.user_id))];
+
  const {data:profiles}=await client.from("profiles")
   .select("id,username,full_name,avatar_url")
   .in("id",userIds);
 
  const profileMap={};
- (profiles||[]).forEach(p=>profileMap[p.id]=p);
+
+ (profiles||[]).forEach(p=>{
+  profileMap[p.id]=p;
+ });
 
  posts.forEach(post=>{
   const profile=profileMap[post.user_id]||{};
+
   const item=document.createElement("article");
   item.className="post";
 
@@ -429,6 +765,7 @@ async function loadFeed(){
 
   const details=document.createElement("div");
   details.append(name,username);
+
   head.append(avatar,details);
   item.append(head);
 
@@ -460,23 +797,29 @@ async function loadFeed(){
   const date=document.createElement("div");
   date.className="post-date";
   date.textContent=new Date(post.created_at).toLocaleString("tr-TR");
-  item.append(date);
 
+  item.append(date);
   feed.append(item);
  });
 
  message("feedMessage",posts.length+" paylaşım gösteriliyor.");
 }
 
+/* ÇIKIŞ */
+
 async function logout(){
  const {error}=await client.auth.signOut();
+
  if(error){
   message("profileMessage",error.message);
   return;
  }
+
  currentUser=null;
  showApp(null);
 }
+
+/* OTURUM KONTROLÜ */
 
 client.auth.onAuthStateChange((_event,session)=>{
  showApp(session?.user||null);
@@ -486,5 +829,6 @@ client.auth.getSession().then(({data})=>{
  showApp(data.session?.user||null);
 });
 </script>
+
 </body>
 </html>
