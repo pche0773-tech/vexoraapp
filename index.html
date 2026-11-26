@@ -9,223 +9,65 @@
 
 <style>
 *{box-sizing:border-box}
-
-body{
- margin:0;
- background:#080808;
- color:#fff;
- font-family:Arial,sans-serif;
- padding-bottom:85px;
-}
-
-header{
- padding:18px;
- text-align:center;
- border-bottom:1px solid #302719;
-}
-
-header h1{
- margin:0;
- color:#e6bd63;
- letter-spacing:7px;
-}
-
-.logo{
- font-size:42px;
- color:#e6bd63;
- font-weight:900;
-}
-
-.container{
- max-width:650px;
- margin:20px auto;
- padding:15px;
-}
-
-.card{
- background:#111;
- border:1px solid #383020;
- border-radius:16px;
- padding:20px;
- margin-bottom:18px;
-}
-
-h2{
- color:#e6bd63;
- margin-top:0;
-}
-
-input,textarea{
- width:100%;
- padding:13px;
- margin:7px 0;
- background:#090909;
- border:1px solid #39332a;
- border-radius:9px;
- color:white;
- font-size:15px;
-}
-
-textarea{
- resize:vertical;
- min-height:75px;
-}
-
-button{
- width:100%;
- padding:14px;
- margin-top:12px;
- border:0;
- border-radius:9px;
- background:linear-gradient(100deg,#a87924,#f0d17a);
- font-weight:bold;
- font-size:15px;
- cursor:pointer;
-}
-
-button:disabled{
- opacity:.5;
- cursor:not-allowed;
-}
-
-.secondary{
- background:#29251d;
- color:#e6bd63;
-}
-
+body{margin:0;background:#080808;color:#fff;font-family:Arial,sans-serif;padding-bottom:85px}
+header{padding:18px;text-align:center;border-bottom:1px solid #302719}
+header h1{margin:0;color:#e6bd63;letter-spacing:7px}
+.logo{font-size:42px;color:#e6bd63;font-weight:900}
+.container{max-width:650px;margin:20px auto;padding:15px}
+.card{background:#111;border:1px solid #383020;border-radius:16px;padding:20px;margin-bottom:18px}
+h2{color:#e6bd63;margin-top:0}
+input,textarea{width:100%;padding:13px;margin:7px 0;background:#090909;border:1px solid #39332a;border-radius:9px;color:white;font-size:15px}
+textarea{resize:vertical;min-height:75px}
+button{width:100%;padding:14px;margin-top:12px;border:0;border-radius:9px;background:linear-gradient(100deg,#a87924,#f0d17a);font-weight:bold;font-size:15px;cursor:pointer}
+button:disabled{opacity:.5;cursor:not-allowed}
+.secondary{background:#29251d;color:#e6bd63}
 #app{display:none}
-
-#message{
- color:#e6bd63;
- font-size:14px;
- margin-top:12px;
-}
-
+#message{color:#e6bd63;font-size:14px;margin-top:12px}
 .profile{text-align:center}
-
-.avatar{
- width:120px;
- height:120px;
- border-radius:50%;
- object-fit:cover;
- border:3px solid #d6aa48;
- background:#222;
-}
-
-.small{
- font-size:12px;
- color:#999;
-}
-
-.post{
- border-bottom:1px solid #383020;
- padding:15px 0;
-}
-
+.avatar{width:120px;height:120px;border-radius:50%;object-fit:cover;border:3px solid #d6aa48;background:#222}
+.small{font-size:12px;color:#999}
+.post{border-bottom:1px solid #383020;padding:15px 0}
 .post:last-child{border-bottom:0}
-
-.post-head{
- display:flex;
- align-items:center;
- gap:10px;
- margin-bottom:10px;
-}
-
-.post-avatar{
- width:42px;
- height:42px;
- border-radius:50%;
- object-fit:cover;
- background:#222;
-}
-
-.post-name{
- font-weight:bold;
- color:#e6bd63;
-}
-
-.post-media{
- width:100%;
- max-height:550px;
- object-fit:contain;
- border-radius:10px;
- background:#080808;
- margin-top:10px;
-}
-
-.post-text{
- white-space:pre-wrap;
- overflow-wrap:anywhere;
-}
-
-.post-date{
- font-size:11px;
- color:#888;
- margin-top:8px;
-}
-
-label{
- display:block;
- margin-top:10px;
-}
-
+.post-head{display:flex;align-items:center;gap:10px;margin-bottom:10px}
+.post-avatar{width:42px;height:42px;border-radius:50%;object-fit:cover;background:#222}
+.post-name{font-weight:bold;color:#e6bd63}
+.post-media{width:100%;max-height:550px;object-fit:contain;border-radius:10px;background:#080808;margin-top:10px}
+.post-text{white-space:pre-wrap;overflow-wrap:anywhere}
+.post-date{font-size:11px;color:#888;margin-top:8px}
+label{display:block;margin-top:10px}
 .page{display:none}
 .page.active{display:block}
+.bottom-nav{position:fixed;bottom:0;left:0;right:0;z-index:1000;display:flex;justify-content:space-around;align-items:center;background:#101010;border-top:1px solid #493a20;padding:8px 3px;padding-bottom:calc(8px + env(safe-area-inset-bottom))}
+.nav-item{width:20%;margin:0;padding:5px 2px;background:transparent;color:#999;border-radius:8px;font-size:11px;font-weight:normal;box-shadow:none}
+.nav-item span{display:block;font-size:23px;margin-bottom:4px}
+.nav-item.active{color:#e6bd63;background:#211b10}
+.empty-state{text-align:center;padding:35px 15px;color:#aaa;line-height:1.7}
+.empty-state .symbol{font-size:38px;color:#e6bd63}
 
-.bottom-nav{
- position:fixed;
- bottom:0;
- left:0;
- right:0;
- z-index:1000;
- display:flex;
- justify-content:space-around;
- align-items:center;
- background:#101010;
- border-top:1px solid #493a20;
- padding:8px 3px;
- padding-bottom:calc(8px + env(safe-area-inset-bottom));
-}
-
-.nav-item{
- width:20%;
- margin:0;
- padding:5px 2px;
- background:transparent;
- color:#999;
- border-radius:8px;
- font-size:11px;
- font-weight:normal;
- box-shadow:none;
-}
-
-.nav-item span{
- display:block;
- font-size:23px;
- margin-bottom:4px;
-}
-
-.nav-item.active{
- color:#e6bd63;
- background:#211b10;
-}
-
-.empty-state{
- text-align:center;
- padding:35px 15px;
- color:#aaa;
- line-height:1.7;
-}
-
-.empty-state .symbol{
- font-size:38px;
- color:#e6bd63;
-}
-
+/* KEŞFET TASARIMI */
+.search-box{margin-bottom:15px}
+.explore-user{display:flex;align-items:center;gap:13px;padding:13px 0;border-bottom:1px solid #302719}
+.explore-user:last-child{border-bottom:0}
+.explore-avatar{width:58px;height:58px;border-radius:50%;object-fit:cover;border:2px solid #b88b39;background:#222;flex-shrink:0}
+.explore-info{flex:1;min-width:0}
+.explore-info strong{display:block;color:#e6bd63;overflow-wrap:anywhere}
+.explore-info small{display:block;color:#999;margin-top:5px;overflow-wrap:anywhere}
+.explore-user button{width:auto;margin:0;padding:10px 13px;font-size:12px;flex-shrink:0}
+.user-detail{display:none;margin-top:18px;border-top:1px solid #493a20;padding-top:18px}
+.user-detail.active{display:block}
+.detail-profile{text-align:center}
+.detail-profile img{width:105px;height:105px;border-radius:50%;object-fit:cover;border:3px solid #d6aa48}
+.detail-profile h3{color:#e6bd63;margin-bottom:5px}
+.detail-bio{color:#bbb;white-space:pre-wrap}
+.detail-posts{margin-top:20px}
+.detail-posts h3{color:#e6bd63}
 @media(max-width:400px){
  .nav-item{font-size:10px}
  .nav-item span{font-size:21px}
  .card{padding:16px}
+ .explore-user{gap:8px}
+ .explore-avatar{width:48px;height:48px}
+ .explore-user button{padding:9px;font-size:11px}
 }
 </style>
 </head>
@@ -242,15 +84,12 @@ label{
 
 <section class="card" id="auth">
  <h2>VEXORA'ya Katıl</h2>
-
  <input id="fullname" placeholder="Adın ve soyadın">
  <input id="username" placeholder="Kullanıcı adın">
  <input id="email" type="email" placeholder="E-posta adresin">
  <input id="password" type="password" placeholder="Şifren (en az 8 karakter)">
-
  <button onclick="signup()">Ücretsiz Hesap Oluştur</button>
  <button class="secondary" onclick="login()">Giriş Yap</button>
-
  <div id="authMessage"></div>
 </section>
 
@@ -269,12 +108,42 @@ label{
  <!-- KEŞFET -->
  <div class="page" id="explorePage">
   <div class="card">
-   <h2>Keşfet</h2>
-   <div class="empty-state">
-    <div class="symbol">⌕</div>
-    <h3>Yeni dünyalar keşfet!</h3>
-    <p>Keşfet bölümü hazırlanıyor.</p>
-    <p>Yakında yeni kullanıcıları ve popüler paylaşımları burada bulabileceksin.</p>
+   <h2>⌕ Keşfet</h2>
+   <p class="small">VEXORA dünyasındaki kullanıcıları keşfet.</p>
+
+   <input
+    id="userSearch"
+    class="search-box"
+    placeholder="İsim veya kullanıcı adı ara..."
+    oninput="filterExploreUsers()"
+   >
+
+   <button class="secondary" id="exploreRefresh" onclick="loadExploreUsers()">
+    Kullanıcıları Yenile
+   </button>
+
+   <div id="exploreMessage" class="small" style="margin-top:15px">
+    Kullanıcılar yükleniyor...
+   </div>
+
+   <div id="exploreUsers"></div>
+
+   <!-- SEÇİLEN KULLANICI PROFİLİ -->
+   <div id="userDetail" class="user-detail">
+    <button class="secondary" onclick="closeUserProfile()">← Keşfete Dön</button>
+
+    <div class="detail-profile">
+     <img id="detailAvatar" alt="Profil fotoğrafı">
+     <h3 id="detailName"></h3>
+     <p id="detailUsername" class="small"></p>
+     <p id="detailBio" class="detail-bio"></p>
+    </div>
+
+    <div class="detail-posts">
+     <h3>Paylaşımları</h3>
+     <div id="detailPostMessage" class="small"></div>
+     <div id="detailPosts"></div>
+    </div>
    </div>
   </div>
  </div>
@@ -283,15 +152,10 @@ label{
  <div class="page" id="sharePage">
   <div class="card">
    <h2>Yeni Paylaşım</h2>
-
-   <textarea id="postContent" maxlength="2000"
-   placeholder="Aklından neler geçiyor?"></textarea>
-
+   <textarea id="postContent" maxlength="2000" placeholder="Aklından neler geçiyor?"></textarea>
    <label class="small">Fotoğraf veya video seç</label>
    <input id="postFile" type="file" accept="image/*,video/*">
-
    <p class="small">En fazla 50 MB dosya yükleyebilirsin.</p>
-
    <button id="shareButton" onclick="createPost()">Paylaş</button>
    <div id="postMessage"></div>
   </div>
@@ -311,7 +175,6 @@ label{
 
  <!-- PROFİL -->
  <div class="page" id="profilePage">
-
   <div class="card profile">
    <img id="avatar" class="avatar" alt="Profil fotoğrafı">
    <h2 id="displayName">VEXORA Kullanıcısı</h2>
@@ -321,20 +184,14 @@ label{
 
   <div class="card">
    <h2>Profilini Düzenle</h2>
-
    <label class="small">Profil fotoğrafın</label>
    <input id="avatarFile" type="file" accept="image/*">
-
    <label class="small">Adın ve soyadın</label>
    <input id="editFullname" placeholder="Adın ve soyadın">
-
    <label class="small">Kullanıcı adın</label>
    <input id="editUsername" placeholder="Kullanıcı adın">
-
    <label class="small">Biyografin</label>
-   <textarea id="editBio" maxlength="250"
-   placeholder="Kendinden bahset..."></textarea>
-
+   <textarea id="editBio" maxlength="250" placeholder="Kendinden bahset..."></textarea>
    <button onclick="saveProfile()">Profili Kaydet</button>
    <div id="profileMessage"></div>
   </div>
@@ -344,27 +201,21 @@ label{
 
  <!-- ALT MENÜ -->
  <nav class="bottom-nav">
-
   <button class="nav-item active" onclick="openTab('home',this)">
    <span>⌂</span>Ana Sayfa
   </button>
-
   <button class="nav-item" onclick="openTab('explore',this)">
    <span>⌕</span>Keşfet
   </button>
-
   <button class="nav-item" onclick="openTab('share',this)">
    <span>＋</span>Paylaş
   </button>
-
   <button class="nav-item" onclick="openTab('messages',this)">
    <span>✉</span>Mesajlar
   </button>
-
   <button class="nav-item" onclick="openTab('profile',this)">
    <span>♙</span>Profil
   </button>
-
  </nav>
 
 </section>
@@ -372,25 +223,32 @@ label{
 <p class="small" style="text-align:center">
  © 2026 VEXORA · Sosyal dünyanın yeni adresi
 </p>
-
 </div>
 
 <script>
 const SUPABASE_URL = "https://coyobsmidxswejusrnca.supabase.co";
 const SUPABASE_KEY = "sb_publishable_ePwGpBQ3VJEeTer_FVtRQQ_AMEXlHhF";
 
-const client = window.supabase.createClient(
- SUPABASE_URL,
- SUPABASE_KEY
-);
+const client = window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
 
 let currentUser = null;
 let currentTab = "home";
+let exploreUsers = [];
+
+/* YARDIMCI FONKSİYONLAR */
+
+function message(id,text){
+ document.getElementById(id).textContent=text;
+}
+
+function placeholderAvatar(){
+ return "https://placehold.co/200x200/171717/e6bd63?text=V";
+}
 
 /* SAYFA GEÇİŞLERİ */
 
 function openTab(tab,button){
- const pages = {
+ const pages={
   home:"homePage",
   explore:"explorePage",
   share:"sharePage",
@@ -420,12 +278,10 @@ function openTab(tab,button){
 
  currentTab=tab;
  window.scrollTo({top:0,behavior:"smooth"});
-}
 
-/* MESAJ GÖSTERME */
-
-function message(id,text){
- document.getElementById(id).textContent=text;
+ if(tab==="explore" && exploreUsers.length===0){
+  loadExploreUsers();
+ }
 }
 
 /* UYGULAMAYI GÖSTER */
@@ -473,10 +329,7 @@ async function signup(){
   password,
   options:{
    emailRedirectTo:location.origin+location.pathname,
-   data:{
-    username,
-    full_name:fullname
-   }
+   data:{username,full_name:fullname}
   }
  });
 
@@ -505,10 +358,7 @@ async function login(){
 
  message("authMessage","Giriş yapılıyor...");
 
- const {data,error}=await client.auth.signInWithPassword({
-  email,
-  password
- });
+ const {data,error}=await client.auth.signInWithPassword({email,password});
 
  if(error){
   message("authMessage","Giriş hatası: "+error.message);
@@ -545,9 +395,7 @@ async function loadProfile(){
  document.getElementById("displayName").textContent=data.full_name||"VEXORA Kullanıcısı";
  document.getElementById("displayUsername").textContent=data.username?"@"+data.username:"";
  document.getElementById("displayBio").textContent=data.bio||"";
-
- document.getElementById("avatar").src=
-  data.avatar_url||"https://placehold.co/200x200/171717/e6bd63?text=V";
+ document.getElementById("avatar").src=data.avatar_url||placeholderAvatar();
 }
 
 /* PROFİLİ KAYDET */
@@ -600,11 +448,7 @@ async function saveProfile(){
   avatarUrl=urlData.publicUrl;
  }
 
- const updates={
-  full_name:fullname,
-  username:username,
-  bio:bio
- };
+ const updates={full_name:fullname,username:username,bio:bio};
 
  if(avatarUrl)updates.avatar_url=avatarUrl;
 
@@ -618,10 +462,10 @@ async function saveProfile(){
  }
 
  document.getElementById("avatarFile").value="";
-
  message("profileMessage","Profilin başarıyla kaydedildi!");
 
  await loadProfile();
+ exploreUsers=[];
 }
 
 /* YENİ PAYLAŞIM */
@@ -650,10 +494,8 @@ async function createPost(){
  }
 
  const button=document.getElementById("shareButton");
-
  button.disabled=true;
  button.textContent="Paylaşılıyor...";
-
  message("postMessage","Paylaşım hazırlanıyor...");
 
  let imageUrl=null;
@@ -689,11 +531,9 @@ async function createPost(){
 
   document.getElementById("postContent").value="";
   document.getElementById("postFile").value="";
-
   message("postMessage","Paylaşımın başarıyla yayınlandı!");
 
   await loadFeed();
-
   openTab("home");
 
  }catch(error){
@@ -704,13 +544,72 @@ async function createPost(){
  }
 }
 
-/* PAYLAŞIM AKIŞI */
+/* PAYLAŞIMI EKRANA ÇİZ */
+
+function renderPost(post,profile){
+ const item=document.createElement("article");
+ item.className="post";
+
+ const head=document.createElement("div");
+ head.className="post-head";
+
+ const avatar=document.createElement("img");
+ avatar.className="post-avatar";
+ avatar.src=profile.avatar_url||placeholderAvatar();
+ avatar.alt="Profil";
+
+ const name=document.createElement("div");
+ name.className="post-name";
+ name.textContent=profile.full_name||"VEXORA Kullanıcısı";
+
+ const username=document.createElement("div");
+ username.className="small";
+ username.textContent=profile.username?"@"+profile.username:"";
+
+ const details=document.createElement("div");
+ details.append(name,username);
+ head.append(avatar,details);
+ item.append(head);
+
+ if(post.content){
+  const text=document.createElement("p");
+  text.className="post-text";
+  text.textContent=post.content;
+  item.append(text);
+ }
+
+ if(post.image_url){
+  const img=document.createElement("img");
+  img.className="post-media";
+  img.src=post.image_url;
+  img.alt="Paylaşım fotoğrafı";
+  img.loading="lazy";
+  item.append(img);
+ }
+
+ if(post.video_url){
+  const video=document.createElement("video");
+  video.className="post-media";
+  video.src=post.video_url;
+  video.controls=true;
+  video.playsInline=true;
+  item.append(video);
+ }
+
+ const date=document.createElement("div");
+ date.className="post-date";
+ date.textContent=new Date(post.created_at).toLocaleString("tr-TR");
+ item.append(date);
+
+ return item;
+}
+
+/* ANA SAYFA AKIŞI */
 
 async function loadFeed(){
  if(!currentUser)return;
 
  const feed=document.getElementById("feed");
-
  message("feedMessage","Paylaşımlar yükleniyor...");
  feed.replaceChildren();
 
@@ -736,73 +635,166 @@ async function loadFeed(){
   .in("id",userIds);
 
  const profileMap={};
-
- (profiles||[]).forEach(p=>{
-  profileMap[p.id]=p;
- });
+ (profiles||[]).forEach(p=>profileMap[p.id]=p);
 
  posts.forEach(post=>{
-  const profile=profileMap[post.user_id]||{};
-
-  const item=document.createElement("article");
-  item.className="post";
-
-  const head=document.createElement("div");
-  head.className="post-head";
-
-  const avatar=document.createElement("img");
-  avatar.className="post-avatar";
-  avatar.src=profile.avatar_url||"https://placehold.co/100x100/171717/e6bd63?text=V";
-  avatar.alt="Profil";
-
-  const name=document.createElement("div");
-  name.className="post-name";
-  name.textContent=profile.full_name||"VEXORA Kullanıcısı";
-
-  const username=document.createElement("div");
-  username.className="small";
-  username.textContent=profile.username?"@"+profile.username:"";
-
-  const details=document.createElement("div");
-  details.append(name,username);
-
-  head.append(avatar,details);
-  item.append(head);
-
-  if(post.content){
-   const text=document.createElement("p");
-   text.className="post-text";
-   text.textContent=post.content;
-   item.append(text);
-  }
-
-  if(post.image_url){
-   const img=document.createElement("img");
-   img.className="post-media";
-   img.src=post.image_url;
-   img.alt="Paylaşım fotoğrafı";
-   img.loading="lazy";
-   item.append(img);
-  }
-
-  if(post.video_url){
-   const video=document.createElement("video");
-   video.className="post-media";
-   video.src=post.video_url;
-   video.controls=true;
-   video.playsInline=true;
-   item.append(video);
-  }
-
-  const date=document.createElement("div");
-  date.className="post-date";
-  date.textContent=new Date(post.created_at).toLocaleString("tr-TR");
-
-  item.append(date);
-  feed.append(item);
+  feed.append(renderPost(post,profileMap[post.user_id]||{}));
  });
 
  message("feedMessage",posts.length+" paylaşım gösteriliyor.");
+}
+
+/* KEŞFET: TÜM KULLANICILARI YÜKLE */
+
+async function loadExploreUsers(){
+ if(!currentUser)return;
+
+ const results=document.getElementById("exploreUsers");
+ results.replaceChildren();
+ message("exploreMessage","Kullanıcılar yükleniyor...");
+
+ const button=document.getElementById("exploreRefresh");
+ button.disabled=true;
+ button.textContent="Yükleniyor...";
+
+ try{
+  let allUsers=[];
+  let from=0;
+  const pageSize=500;
+
+  while(true){
+   const {data,error}=await client.from("profiles")
+    .select("id,username,full_name,bio,avatar_url,created_at")
+    .order("created_at",{ascending:false})
+    .range(from,from+pageSize-1);
+
+   if(error)throw error;
+
+   if(!data||data.length===0)break;
+
+   allUsers=allUsers.concat(data);
+
+   if(data.length<pageSize)break;
+
+   from+=pageSize;
+  }
+
+  exploreUsers=allUsers;
+  filterExploreUsers();
+
+ }catch(error){
+  message("exploreMessage","Kullanıcılar yüklenemedi: "+error.message);
+ }finally{
+  button.disabled=false;
+  button.textContent="Kullanıcıları Yenile";
+ }
+}
+
+/* KEŞFET: ARAMA VE LİSTELEME */
+
+function filterExploreUsers(){
+ const search=document.getElementById("userSearch").value
+  .trim().toLocaleLowerCase("tr-TR");
+
+ const results=document.getElementById("exploreUsers");
+ results.replaceChildren();
+
+ const filtered=exploreUsers.filter(user=>{
+  if(user.id===currentUser?.id)return false;
+
+  const name=(user.full_name||"").toLocaleLowerCase("tr-TR");
+  const username=(user.username||"").toLocaleLowerCase("tr-TR");
+
+  return name.includes(search)||username.includes(search);
+ });
+
+ if(filtered.length===0){
+  message(
+   "exploreMessage",
+   exploreUsers.length===0
+    ?"Henüz kullanıcı bulunamadı."
+    :"Aramana uygun kullanıcı bulunamadı."
+  );
+  return;
+ }
+
+ message("exploreMessage",filtered.length+" kullanıcı gösteriliyor.");
+
+ filtered.forEach(user=>{
+  const card=document.createElement("div");
+  card.className="explore-user";
+
+  const avatar=document.createElement("img");
+  avatar.className="explore-avatar";
+  avatar.src=user.avatar_url||placeholderAvatar();
+  avatar.alt="Profil fotoğrafı";
+
+  const info=document.createElement("div");
+  info.className="explore-info";
+
+  const name=document.createElement("strong");
+  name.textContent=user.full_name||"VEXORA Kullanıcısı";
+
+  const username=document.createElement("small");
+  username.textContent=user.username?"@"+user.username:"";
+
+  info.append(name,username);
+
+  const button=document.createElement("button");
+  button.textContent="Profili Gör";
+  button.addEventListener("click",()=>openUserProfile(user.id));
+
+  card.append(avatar,info,button);
+  results.append(card);
+ });
+}
+
+/* KEŞFET: SEÇİLEN KULLANICININ PROFİLİ */
+
+async function openUserProfile(userId){
+ const user=exploreUsers.find(u=>u.id===userId);
+ if(!user)return;
+
+ const detail=document.getElementById("userDetail");
+ detail.classList.add("active");
+
+ document.getElementById("detailAvatar").src=user.avatar_url||placeholderAvatar();
+ document.getElementById("detailName").textContent=user.full_name||"VEXORA Kullanıcısı";
+ document.getElementById("detailUsername").textContent=user.username?"@"+user.username:"";
+ document.getElementById("detailBio").textContent=user.bio||"Henüz biyografi eklenmemiş.";
+
+ const postsArea=document.getElementById("detailPosts");
+ postsArea.replaceChildren();
+ message("detailPostMessage","Paylaşımlar yükleniyor...");
+
+ detail.scrollIntoView({behavior:"smooth",block:"start"});
+
+ const {data:posts,error}=await client.from("posts")
+  .select("id,user_id,content,image_url,video_url,created_at")
+  .eq("user_id",userId)
+  .order("created_at",{ascending:false})
+  .limit(50);
+
+ if(error){
+  message("detailPostMessage","Paylaşımlar yüklenemedi: "+error.message);
+  return;
+ }
+
+ if(!posts||posts.length===0){
+  message("detailPostMessage","Bu kullanıcı henüz paylaşım yapmamış.");
+  return;
+ }
+
+ posts.forEach(post=>{
+  postsArea.append(renderPost(post,user));
+ });
+
+ message("detailPostMessage",posts.length+" paylaşım gösteriliyor.");
+}
+
+function closeUserProfile(){
+ document.getElementById("userDetail").classList.remove("active");
+ document.getElementById("detailPosts").replaceChildren();
 }
 
 /* ÇIKIŞ */
@@ -816,6 +808,7 @@ async function logout(){
  }
 
  currentUser=null;
+ exploreUsers=[];
  showApp(null);
 }
 
