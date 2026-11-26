@@ -120,7 +120,28 @@ label{display:block;margin-top:10px}
 
  <p class="small" style="text-align:center">© 2026 VEXORA · Sosyal dünyanın yeni adresi</p>
 </div>
+function openTab(tab,button){
+ document.querySelectorAll(".nav-item").forEach(item=>{
+  item.classList.remove("active");
+ });
+ button.classList.add("active");
 
+ if(tab==="home"){
+  document.getElementById("feed").scrollIntoView({behavior:"smooth"});
+ }
+ if(tab==="explore"){
+  alert("Keşfet sayfasını birazdan kuracağız!");
+ }
+ if(tab==="share"){
+  document.getElementById("postContent").scrollIntoView({behavior:"smooth"});
+ }
+ if(tab==="messages"){
+  alert("Mesajlar sayfasını birazdan kuracağız!");
+ }
+ if(tab==="profile"){
+  document.querySelector(".profile").scrollIntoView({behavior:"smooth"});
+ }
+}
 <script>
 const SUPABASE_URL = "https://coyobsmidxswejusrnca.supabase.co";
 const SUPABASE_KEY = "sb_publishable_ePwGpBQ3VJEeTer_FVtRQQ_AMEXlHhF";
