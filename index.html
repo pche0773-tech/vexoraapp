@@ -3,71 +3,76 @@
 <html lang="tr">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <title>VEXORA - Sosyal Dünyan</title>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
 *{box-sizing:border-box}
-body{
- margin:0;min-height:100vh;background:#080808;color:white;
- font-family:Arial,sans-serif;display:flex;align-items:center;
- justify-content:center;padding:20px
-}
-.container{width:100%;max-width:430px;text-align:center}
-.logo{
- width:90px;height:90px;margin:auto;
- border:2px solid #d6aa48;border-radius:25px;
- display:grid;place-items:center;color:#e6bd63;
- font-size:68px;font-weight:900;
- text-shadow:0 0 22px #b98a32
-}
-h1{letter-spacing:7px;color:#e4b957;font-size:30px;margin:15px 0 5px}
-.subtitle{color:#999;letter-spacing:3px;font-size:10px}
-.card{
- margin-top:32px;padding:25px 22px;border:1px solid #383020;
- border-radius:18px;background:#111
-}
-h2{font-size:21px;margin:0 0 20px}
-input{
- width:100%;padding:14px;margin:7px 0;background:#090909;
- border:1px solid #39332a;border-radius:9px;color:white;font-size:15px
-}
-input:focus{outline:none;border-color:#d6aa48}
-button{
- width:100%;padding:14px;margin-top:12px;border:0;
- border-radius:9px;background:linear-gradient(100deg,#a87924,#f0d17a);
- color:#080808;font-size:15px;font-weight:bold;cursor:pointer
-}
+body{margin:0;background:#080808;color:#fff;font-family:Arial,sans-serif}
+header{padding:20px;text-align:center;border-bottom:1px solid #302719}
+header h1{margin:0;color:#e6bd63;letter-spacing:7px}
+.logo{font-size:42px;color:#e6bd63;font-weight:900}
+.container{max-width:650px;margin:30px auto;padding:18px}
+.card{background:#111;border:1px solid #383020;border-radius:16px;padding:24px;margin-bottom:20px}
+h2{color:#e6bd63;margin-top:0}
+input,textarea{width:100%;padding:13px;margin:7px 0;background:#090909;border:1px solid #39332a;border-radius:9px;color:white;font-size:15px}
+textarea{resize:vertical;min-height:85px}
+button{width:100%;padding:14px;margin-top:12px;border:0;border-radius:9px;background:linear-gradient(100deg,#a87924,#f0d17a);font-weight:bold;font-size:15px;cursor:pointer}
 .secondary{background:#29251d;color:#e6bd63}
-#message{font-size:13px;color:#e6bd63;margin-top:15px;line-height:1.5}
-#account{display:none}
-.note{font-size:12px;color:#888;margin-top:22px}
+#app{display:none}
+#message{color:#e6bd63;font-size:14px;line-height:1.5;margin-top:12px}
+.profile{text-align:center}
+.avatar{width:120px;height:120px;border-radius:50%;object-fit:cover;border:3px solid #d6aa48;background:#222}
+.small{font-size:12px;color:#999}
 </style>
 </head>
 <body>
-<div class="container">
+
+<header>
  <div class="logo">V</div>
  <h1>VEXORA</h1>
- <div class="subtitle">YOUR SOCIAL WORLD</div>
+ <p class="small">YOUR SOCIAL WORLD</p>
+</header>
 
- <div class="card" id="auth">
-  <h2>Aramıza Katıl</h2>
+<div class="container">
+
+ <section class="card" id="auth">
+  <h2>VEXORA'ya Katıl</h2>
   <input id="fullname" placeholder="Adın ve soyadın">
   <input id="username" placeholder="Kullanıcı adın">
   <input id="email" type="email" placeholder="E-posta adresin">
   <input id="password" type="password" placeholder="Şifren (en az 8 karakter)">
   <button onclick="signup()">Ücretsiz Hesap Oluştur</button>
   <button class="secondary" onclick="login()">Giriş Yap</button>
-  <div id="message"></div>
- </div>
+  <div id="authMessage"></div>
+ </section>
 
- <div class="card" id="account">
-  <h2>VEXORA'ya Hoş Geldin!</h2>
-  <p id="welcome"></p>
-  <button onclick="logout()">Çıkış Yap</button>
- </div>
+ <section id="app">
+  <div class="card profile">
+   <img id="avatar" class="avatar" alt="Profil fotoğrafı">
+   <h2 id="displayName">VEXORA Kullanıcısı</h2>
+   <p id="displayUsername" class="small"></p>
+   <p id="displayBio"></p>
+  </div>
 
- <div class="note">© 2026 VEXORA · Sosyal dünyanın yeni adresi</div>
+  <div class="card">
+   <h2>Profilini Düzenle</h2>
+   <label class="small">Profil fotoğrafın</label>
+   <input id="avatarFile" type="file" accept="image/*">
+   <label class="small">Adın ve soyadın</label>
+   <input id="editFullname" placeholder="Adın ve soyadın">
+   <label class="small">Kullanıcı adın</label>
+   <input id="editUsername" placeholder="Kullanıcı adın">
+   <label class="small">Biyografin</label>
+   <textarea id="editBio" maxlength="250" placeholder="Kendinden bahset..."></textarea>
+   <button onclick="saveProfile()">Profili Kaydet</button>
+   <div id="profileMessage"></div>
+  </div>
+
+  <button class="secondary" onclick="logout()">Çıkış Yap</button>
+ </section>
+
+ <p class="small" style="text-align:center">© 2026 VEXORA</p>
 </div>
 
 <script>
@@ -79,10 +84,17 @@ const client = window.supabase.createClient(
   SUPABASE_KEY
 );
 
-const message = document.getElementById("message");
+let currentUser = null;
 
-function showMessage(text) {
-  message.textContent = text;
+function message(id, text) {
+  document.getElementById(id).textContent = text;
+}
+
+function showApp(user) {
+  currentUser = user;
+  document.getElementById("auth").style.display = user ? "none" : "block";
+  document.getElementById("app").style.display = user ? "block" : "none";
+  if (user) loadProfile();
 }
 
 async function signup() {
@@ -92,42 +104,40 @@ async function signup() {
   const password = document.getElementById("password").value;
 
   if (!fullname || !username || !email || !password) {
-    showMessage("Lütfen bütün alanları doldur.");
+    message("authMessage","Bütün alanları doldur.");
     return;
   }
 
   if (password.length < 8) {
-    showMessage("Şifren en az 8 karakter olmalı.");
+    message("authMessage","Şifre en az 8 karakter olmalı.");
     return;
   }
 
   if (!/^[a-zA-Z0-9_]+$/.test(username)) {
-    showMessage("Kullanıcı adı yalnızca harf, rakam ve _ içerebilir.");
+    message("authMessage","Kullanıcı adında yalnızca harf, rakam ve _ kullan.");
     return;
   }
 
-  showMessage("Hesabın oluşturuluyor...");
+  message("authMessage","Hesabın oluşturuluyor...");
 
-  const {data, error} = await client.auth.signUp({
+  const {data,error} = await client.auth.signUp({
     email,
     password,
-    options: {
-      data: {
-        username,
-        full_name: fullname
-      }
+    options:{
+      emailRedirectTo: location.origin + location.pathname,
+      data:{username,full_name:fullname}
     }
   });
 
-  if (error) {
-    showMessage("Hata: " + error.message);
+  if(error) {
+    message("authMessage","Hata: "+error.message);
     return;
   }
 
-  if (data.session) {
-    showMessage("Hesabın oluşturuldu!");
+  if(data.session) {
+    showApp(data.session.user);
   } else {
-    showMessage("Kayıt başarılı! E-posta adresine gelen doğrulama bağlantısına tıkla.");
+    message("authMessage","Kayıt başarılı! E-postanı doğrula, ardından giriş yap.");
   }
 }
 
@@ -135,45 +145,145 @@ async function login() {
   const email = document.getElementById("email").value.trim();
   const password = document.getElementById("password").value;
 
-  if (!email || !password) {
-    showMessage("E-posta ve şifreni gir.");
+  if(!email || !password) {
+    message("authMessage","E-posta ve şifreni gir.");
     return;
   }
 
-  showMessage("Giriş yapılıyor...");
+  message("authMessage","Giriş yapılıyor...");
 
-  const {error} = await client.auth.signInWithPassword({
-    email,
-    password
-  });
+  const {data,error} = await client.auth.signInWithPassword({email,password});
 
-  if (error) {
-    showMessage("Giriş hatası: " + error.message);
+  if(error) {
+    message("authMessage","Giriş hatası: "+error.message);
+    return;
   }
+
+  showApp(data.user);
+}
+
+async function loadProfile() {
+  if(!currentUser) return;
+
+  const {data,error} = await client
+    .from("profiles")
+    .select("username,full_name,bio,avatar_url")
+    .eq("id",currentUser.id)
+    .maybeSingle();
+
+  if(error) {
+    message("profileMessage","Profil yüklenemedi: "+error.message);
+    return;
+  }
+
+  if(!data) {
+    message("profileMessage","Profil kaydı bulunamadı.");
+    return;
+  }
+
+  document.getElementById("editFullname").value = data.full_name || "";
+  document.getElementById("editUsername").value = data.username || "";
+  document.getElementById("editBio").value = data.bio || "";
+  document.getElementById("displayName").textContent = data.full_name || "VEXORA Kullanıcısı";
+  document.getElementById("displayUsername").textContent = data.username ? "@"+data.username : "";
+
+  document.getElementById("displayBio").textContent = data.bio || "";
+
+  document.getElementById("avatar").src =
+    data.avatar_url || "https://placehold.co/200x200/171717/e6bd63?text=V";
+}
+
+async function saveProfile() {
+  if(!currentUser) return;
+
+  const fullname = document.getElementById("editFullname").value.trim();
+  const username = document.getElementById("editUsername").value.trim();
+  const bio = document.getElementById("editBio").value.trim();
+  const file = document.getElementById("avatarFile").files[0];
+
+  if(!fullname || !username) {
+    message("profileMessage","Ad ve kullanıcı adı boş bırakılamaz.");
+    return;
+  }
+
+  if(!/^[a-zA-Z0-9_]+$/.test(username)) {
+    message("profileMessage","Kullanıcı adında yalnızca harf, rakam ve _ kullan.");
+    return;
+  }
+
+  message("profileMessage","Profil kaydediliyor...");
+
+  let avatarUrl = null;
+
+  if(file) {
+    if(!file.type.startsWith("image/")) {
+      message("profileMessage","Lütfen bir resim dosyası seç.");
+      return;
+    }
+
+    if(file.size > 5 * 1024 * 1024) {
+      message("profileMessage","Fotoğraf en fazla 5 MB olabilir.");
+      return;
+    }
+
+    const extension = file.name.split(".").pop().toLowerCase();
+    const path = currentUser.id + "/" + Date.now() + "." + extension;
+
+    const {error:uploadError} = await client.storage
+      .from("avatars")
+      .upload(path,file,{upsert:false});
+
+    if(uploadError) {
+      message("profileMessage","Fotoğraf yüklenemedi: "+uploadError.message);
+      return;
+    }
+
+    const {data:urlData} = client.storage
+      .from("avatars")
+      .getPublicUrl(path);
+
+    avatarUrl = urlData.publicUrl;
+  }
+
+  const updates = {
+    full_name:fullname,
+    username:username,
+    bio:bio
+  };
+
+  if(avatarUrl) updates.avatar_url = avatarUrl;
+
+  const {error} = await client
+    .from("profiles")
+    .update(updates)
+    .eq("id",currentUser.id);
+
+  if(error) {
+    message("profileMessage","Kaydetme hatası: "+error.message);
+    return;
+  }
+
+  document.getElementById("avatarFile").value = "";
+  message("profileMessage","Profilin başarıyla kaydedildi!");
+  await loadProfile();
 }
 
 async function logout() {
   const {error} = await client.auth.signOut();
-  if (error) showMessage(error.message);
-  renderUser(null);
-}
-
-function renderUser(user) {
-  document.getElementById("auth").style.display = user ? "none" : "block";
-  document.getElementById("account").style.display = user ? "block" : "none";
-
-  if (user) {
-    document.getElementById("welcome").textContent =
-      "Merhaba, " + (user.user_metadata.full_name || user.email);
+  if(error) {
+    message("profileMessage",error.message);
+    return;
   }
+  currentUser = null;
+  showApp(null);
 }
 
-client.auth.onAuthStateChange((_event, session) => {
-  renderUser(session?.user || null);
+client.auth.onAuthStateChange((_event,session) => {
+  showApp(session?.user || null);
 });
 
 client.auth.getSession().then(({data}) => {
-  renderUser(data.session?.user || null);
+  showApp(data.session?.user || null);
 });
 </script>
 </body>
