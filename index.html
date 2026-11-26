@@ -4,41 +4,43 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>VEXORA - Your Social World</title>
+<title>VEXORA - Sosyal Dünyan</title>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
 *{box-sizing:border-box}
 body{
- margin:0;min-height:100vh;background:#080808;color:#fff;
+ margin:0;min-height:100vh;background:#080808;color:white;
  font-family:Arial,sans-serif;display:flex;align-items:center;
- justify-content:center;padding:20px;
+ justify-content:center;padding:20px
 }
-.container{width:100%;max-width:420px;text-align:center}
+.container{width:100%;max-width:430px;text-align:center}
 .logo{
- width:100px;height:100px;margin:0 auto 18px;
- border:2px solid #d6aa48;border-radius:28px;
- display:grid;place-items:center;
- color:#e6bd63;font-size:76px;font-weight:900;
- text-shadow:0 0 22px #b98a32;
- transform:rotate(0deg);
+ width:90px;height:90px;margin:auto;
+ border:2px solid #d6aa48;border-radius:25px;
+ display:grid;place-items:center;color:#e6bd63;
+ font-size:68px;font-weight:900;
+ text-shadow:0 0 22px #b98a32
 }
-h1{letter-spacing:7px;color:#e4b957;font-size:30px;margin:10px 0}
+h1{letter-spacing:7px;color:#e4b957;font-size:30px;margin:15px 0 5px}
 .subtitle{color:#999;letter-spacing:3px;font-size:10px}
 .card{
- margin-top:38px;padding:28px 22px;border:1px solid #383020;
- border-radius:18px;background:#111;
+ margin-top:32px;padding:25px 22px;border:1px solid #383020;
+ border-radius:18px;background:#111
 }
-h2{font-size:21px;margin:0 0 22px}
+h2{font-size:21px;margin:0 0 20px}
 input{
- width:100%;padding:15px;margin:8px 0;background:#090909;
- border:1px solid #39332a;border-radius:9px;color:white;
- font-size:15px;outline:none;
+ width:100%;padding:14px;margin:7px 0;background:#090909;
+ border:1px solid #39332a;border-radius:9px;color:white;font-size:15px
 }
-input:focus{border-color:#d6aa48}
+input:focus{outline:none;border-color:#d6aa48}
 button{
- width:100%;padding:15px;margin-top:14px;border:0;
+ width:100%;padding:14px;margin-top:12px;border:0;
  border-radius:9px;background:linear-gradient(100deg,#a87924,#f0d17a);
- color:#080808;font-size:16px;font-weight:bold;cursor:pointer;
+ color:#080808;font-size:15px;font-weight:bold;cursor:pointer
 }
+.secondary{background:#29251d;color:#e6bd63}
+#message{font-size:13px;color:#e6bd63;margin-top:15px;line-height:1.5}
+#account{display:none}
 .note{font-size:12px;color:#888;margin-top:22px}
 </style>
 </head>
@@ -47,14 +49,132 @@ button{
  <div class="logo">V</div>
  <h1>VEXORA</h1>
  <div class="subtitle">YOUR SOCIAL WORLD</div>
- <div class="card">
+
+ <div class="card" id="auth">
   <h2>Aramıza Katıl</h2>
-  <input type="email" placeholder="E-posta adresin">
-  <input type="password" placeholder="Şifren">
-  <button onclick="alert('Üyelik sistemi yakında aktif olacak!')">Giriş Yap</button>
-  <button onclick="alert('Kayıt sistemi yakında aktif olacak!')">Ücretsiz Hesap Oluştur</button>
+  <input id="fullname" placeholder="Adın ve soyadın">
+  <input id="username" placeholder="Kullanıcı adın">
+  <input id="email" type="email" placeholder="E-posta adresin">
+  <input id="password" type="password" placeholder="Şifren (en az 8 karakter)">
+  <button onclick="signup()">Ücretsiz Hesap Oluştur</button>
+  <button class="secondary" onclick="login()">Giriş Yap</button>
+  <div id="message"></div>
  </div>
+
+ <div class="card" id="account">
+  <h2>VEXORA'ya Hoş Geldin!</h2>
+  <p id="welcome"></p>
+  <button onclick="logout()">Çıkış Yap</button>
+ </div>
+
  <div class="note">© 2026 VEXORA · Sosyal dünyanın yeni adresi</div>
 </div>
+
+<script>
+const SUPABASE_URL = "https://coyobsmidxswejusrnca.supabase.co";
+const SUPABASE_KEY = "sb_publishable_ePwGpBQ3VJEeTer_FVtRQQ_AMEXlHhF";
+
+const client = window.supabase.createClient(
+  SUPABASE_URL,
+  SUPABASE_KEY
+);
+
+const message = document.getElementById("message");
+
+function showMessage(text) {
+  message.textContent = text;
+}
+
+async function signup() {
+  const fullname = document.getElementById("fullname").value.trim();
+  const username = document.getElementById("username").value.trim();
+  const email = document.getElementById("email").value.trim();
+  const password = document.getElementById("password").value;
+
+  if (!fullname || !username || !email || !password) {
+    showMessage("Lütfen bütün alanları doldur.");
+    return;
+  }
+
+  if (password.length < 8) {
+    showMessage("Şifren en az 8 karakter olmalı.");
+    return;
+  }
+
+  if (!/^[a-zA-Z0-9_]+$/.test(username)) {
+    showMessage("Kullanıcı adı yalnızca harf, rakam ve _ içerebilir.");
+    return;
+  }
+
+  showMessage("Hesabın oluşturuluyor...");
+
+  const {data, error} = await client.auth.signUp({
+    email,
+    password,
+    options: {
+      data: {
+        username,
+        full_name: fullname
+      }
+    }
+  });
+
+  if (error) {
+    showMessage("Hata: " + error.message);
+    return;
+  }
+
+  if (data.session) {
+    showMessage("Hesabın oluşturuldu!");
+  } else {
+    showMessage("Kayıt başarılı! E-posta adresine gelen doğrulama bağlantısına tıkla.");
+  }
+}
+
+async function login() {
+  const email = document.getElementById("email").value.trim();
+  const password = document.getElementById("password").value;
+
+  if (!email || !password) {
+    showMessage("E-posta ve şifreni gir.");
+    return;
+  }
+
+  showMessage("Giriş yapılıyor...");
+
+  const {error} = await client.auth.signInWithPassword({
+    email,
+    password
+  });
+
+  if (error) {
+    showMessage("Giriş hatası: " + error.message);
+  }
+}
+
+async function logout() {
+  const {error} = await client.auth.signOut();
+  if (error) showMessage(error.message);
+  renderUser(null);
+}
+
+function renderUser(user) {
+  document.getElementById("auth").style.display = user ? "none" : "block";
+  document.getElementById("account").style.display = user ? "block" : "none";
+
+  if (user) {
+    document.getElementById("welcome").textContent =
+      "Merhaba, " + (user.user_metadata.full_name || user.email);
+  }
+}
+
+client.auth.onAuthStateChange((_event, session) => {
+  renderUser(session?.user || null);
+});
+
+client.auth.getSession().then(({data}) => {
+  renderUser(data.session?.user || null);
+});
+</script>
 </body>
 </html>
