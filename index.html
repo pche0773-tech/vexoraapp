@@ -1,0 +1,60 @@
+
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>VEXORA - Your Social World</title>
+<style>
+*{box-sizing:border-box}
+body{
+ margin:0;min-height:100vh;background:#080808;color:#fff;
+ font-family:Arial,sans-serif;display:flex;align-items:center;
+ justify-content:center;padding:20px;
+}
+.container{width:100%;max-width:420px;text-align:center}
+.logo{
+ width:100px;height:100px;margin:0 auto 18px;
+ border:2px solid #d6aa48;border-radius:28px;
+ display:grid;place-items:center;
+ color:#e6bd63;font-size:76px;font-weight:900;
+ text-shadow:0 0 22px #b98a32;
+ transform:rotate(0deg);
+}
+h1{letter-spacing:7px;color:#e4b957;font-size:30px;margin:10px 0}
+.subtitle{color:#999;letter-spacing:3px;font-size:10px}
+.card{
+ margin-top:38px;padding:28px 22px;border:1px solid #383020;
+ border-radius:18px;background:#111;
+}
+h2{font-size:21px;margin:0 0 22px}
+input{
+ width:100%;padding:15px;margin:8px 0;background:#090909;
+ border:1px solid #39332a;border-radius:9px;color:white;
+ font-size:15px;outline:none;
+}
+input:focus{border-color:#d6aa48}
+button{
+ width:100%;padding:15px;margin-top:14px;border:0;
+ border-radius:9px;background:linear-gradient(100deg,#a87924,#f0d17a);
+ color:#080808;font-size:16px;font-weight:bold;cursor:pointer;
+}
+.note{font-size:12px;color:#888;margin-top:22px}
+</style>
+</head>
+<body>
+<div class="container">
+ <div class="logo">V</div>
+ <h1>VEXORA</h1>
+ <div class="subtitle">YOUR SOCIAL WORLD</div>
+ <div class="card">
+  <h2>Aramıza Katıl</h2>
+  <input type="email" placeholder="E-posta adresin">
+  <input type="password" placeholder="Şifren">
+  <button onclick="alert('Üyelik sistemi yakında aktif olacak!')">Giriş Yap</button>
+  <button onclick="alert('Kayıt sistemi yakında aktif olacak!')">Ücretsiz Hesap Oluştur</button>
+ </div>
+ <div class="note">© 2026 VEXORA · Sosyal dünyanın yeni adresi</div>
+</div>
+</body>
+</html>
