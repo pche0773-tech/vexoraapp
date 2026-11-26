@@ -8,592 +8,642 @@
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
 *{box-sizing:border-box}
-body{margin:0;background:#080808;color:#fff;font-family:Arial,sans-serif}
-header{padding:16px;text-align:center;border-bottom:1px solid #302719;background:#0b0b0b}
-.logo{font-size:36px;font-weight:900;color:#e6bd63}
-header h1{margin:0;color:#e6bd63;letter-spacing:6px}
-.small{font-size:12px;color:#999}
-.container{max-width:680px;margin:20px auto;padding:12px}
-.card{background:#111;border:1px solid #383020;border-radius:15px;padding:18px;margin-bottom:15px}
-h2,h3{color:#e6bd63}
-input,textarea{width:100%;padding:13px;margin:7px 0;background:#090909;border:1px solid #39332a;border-radius:9px;color:white;font-size:15px}
+body{margin:0;background:#f5f5f5;color:#171717;font-family:Arial,sans-serif}
+button,input,textarea{font:inherit}
+button{cursor:pointer;border:0;border-radius:9px;padding:11px 15px;background:#111;color:white;font-weight:700}
+button:disabled{opacity:.5;cursor:not-allowed}
+button.light{background:#eee;color:#111}
+button.outline{background:white;color:#111;border:1px solid #ddd}
+header{height:65px;background:white;border-bottom:1px solid #e5e5e5;display:flex;align-items:center;justify-content:space-between;padding:0 max(16px,calc((100% - 950px)/2));position:sticky;top:0;z-index:10}
+.logo{font-size:27px;font-weight:900;letter-spacing:3px}
+.logo span{border:3px solid #111;border-radius:8px;padding:2px 6px;margin-right:5px}
+.header-right{font-size:12px;color:#777}
+.container{max-width:680px;margin:20px auto;padding:0 12px 95px}
+.card,.post{background:white;border:1px solid #e8e8e8;border-radius:14px;padding:17px;margin-bottom:14px}
+h2{font-size:21px;margin:0 0 16px}
+h3{font-size:16px;margin:0}
+input,textarea{width:100%;padding:13px;border:1px solid #ddd;border-radius:9px;background:#fafafa;color:#111;margin:6px 0 12px;outline:none}
+input:focus,textarea:focus{border-color:#555}
 textarea{resize:vertical;min-height:75px}
-button{padding:12px 15px;border:0;border-radius:9px;background:linear-gradient(100deg,#a87924,#f0d17a);font-weight:bold;cursor:pointer;color:#111}
-.secondary{background:#29251d;color:#e6bd63;border:1px solid #554526}
-button:disabled{opacity:.5}
-#app{display:none}
-nav{display:flex;justify-content:space-around;gap:4px;position:sticky;bottom:0;background:#101010;border-top:1px solid #40331d;padding:9px 3px;z-index:5}
-nav button{flex:1;padding:12px 3px;font-size:12px;background:transparent;color:#ddd}
-nav button.active{color:#e6bd63;background:#292216}
+label{font-size:12px;color:#777}
+.small{font-size:12px;color:#777}
+.muted{color:#888}
+.hidden{display:none!important}
 .page{display:none}
 .page.active{display:block}
-.avatar{width:90px;height:90px;border-radius:50%;object-fit:cover;border:2px solid #d6aa48;background:#222}
-.post-avatar{width:42px;height:42px;border-radius:50%;object-fit:cover}
+#app{display:none}
+#auth{max-width:420px;margin:35px auto}
+#auth button{width:100%;margin-top:7px}
+.message{font-size:13px;color:#555;margin-top:10px;white-space:pre-wrap}
+nav{position:fixed;bottom:0;left:0;right:0;background:white;border-top:1px solid #ddd;display:flex;justify-content:center;z-index:20;padding:6px 3px calc(6px + env(safe-area-inset-bottom))}
+nav button{flex:1;max-width:135px;background:transparent;color:#555;padding:10px 2px;font-size:12px}
+nav button.active{color:#000;background:#eee}
+.avatar{width:76px;height:76px;border-radius:50%;object-fit:cover;background:#eee}
+.post-head{display:flex;align-items:center;gap:11px;margin-bottom:13px}
+.post-avatar{width:43px;height:43px;border-radius:50%;object-fit:cover;background:#eee}
+.post-head .who{flex:1;min-width:0}
+.post-media{width:100%;max-height:650px;object-fit:contain;background:#111;border-radius:9px;margin-top:10px}
+.post-text{white-space:pre-wrap;line-height:1.5;margin:10px 0}
+.post-actions{display:flex;gap:9px;align-items:center;margin-top:12px;flex-wrap:wrap}
+.post-actions button{padding:8px 11px;font-size:13px}
+.post-date{font-size:11px;color:#999;margin-top:12px}
 .profile{text-align:center}
-.post{background:#111;border:1px solid #302719;border-radius:14px;padding:15px;margin-bottom:15px}
-.post-head{display:flex;align-items:center;gap:10px;margin-bottom:12px}
-.post-media{width:100%;max-height:600px;object-fit:contain;border-radius:10px;background:#050505}
-.post-content{line-height:1.5;white-space:pre-wrap}
-.post-date{font-size:11px;color:#888;margin-top:10px}
-.search-box{margin-bottom:15px}
-.explore-user{display:flex;align-items:center;gap:12px;padding:12px 0;border-bottom:1px solid #292929}
-.explore-avatar{width:55px;height:55px;border-radius:50%;object-fit:cover}
-.explore-info{flex:1;min-width:0}
-.explore-info strong{display:block}
-.explore-info span{font-size:12px;color:#999}
-.explore-user button{width:auto;margin:0}
-.stats{display:flex;justify-content:center;gap:25px;margin:18px 0}
-.stats div{text-align:center}
-.stats strong{display:block;color:#e6bd63;font-size:19px}
-.stats span{font-size:12px;color:#aaa}
-.profile-actions{display:flex;gap:8px;justify-content:center;flex-wrap:wrap}
-.profile-actions button{min-width:125px}
-.detail-posts{margin-top:15px}
-#message,#authMessage,#profileMessage,#shareMessage{color:#e6bd63;font-size:13px;line-height:1.5;margin-top:10px}
-.empty{text-align:center;color:#999;padding:25px}
-footer{text-align:center;color:#777;font-size:12px;padding:18px}
-@media(max-width:420px){nav button{font-size:10px}.container{padding:9px}.card{padding:14px}}
+.profile-stats{display:flex;justify-content:center;gap:32px;margin:18px 0}
+.profile-stats div{text-align:center}
+.profile-stats strong{display:block;font-size:19px}
+.profile-stats span{font-size:12px;color:#888}
+.profile-actions{display:flex;justify-content:center;gap:8px;flex-wrap:wrap}
+.user-row{display:flex;align-items:center;gap:11px;padding:12px 0;border-bottom:1px solid #eee}
+.user-row:last-child{border:0}
+.user-row img{width:48px;height:48px;border-radius:50%;object-fit:cover}
+.user-row .info{flex:1;min-width:0}
+.user-row .info strong{display:block}
+.user-row .info span{font-size:12px;color:#888}
+.user-row button{font-size:12px;padding:9px}
+.comments{background:#fafafa;border-radius:9px;padding:10px;margin-top:10px}
+.comment-row{font-size:13px;padding:7px 0;border-bottom:1px solid #eee}
+.comment-row:last-child{border:0}
+.comment-form{display:flex;gap:6px;margin-top:8px}
+.comment-form input{margin:0;min-width:0}
+.comment-form button{padding:8px 11px}
+.chat-layout{display:grid;gap:10px}
+.chat-box{border:1px solid #eee;border-radius:10px;padding:12px;min-height:220px;max-height:420px;overflow:auto;background:#fafafa}
+.bubble{padding:10px 12px;border-radius:13px;margin:8px 0;max-width:85%;font-size:14px;white-space:pre-wrap;overflow-wrap:anywhere}
+.bubble.mine{background:#111;color:white;margin-left:auto}
+.bubble.theirs{background:#e9e9e9;color:#111}
+.bubble small{display:block;font-size:10px;opacity:.65;margin-top:5px}
+.chat-send{display:flex;gap:7px;margin-top:8px}
+.chat-send input{margin:0;min-width:0}
+.chat-send button{white-space:nowrap}
+.notice{padding:12px 0;border-bottom:1px solid #eee;display:flex;gap:10px;align-items:center;font-size:13px}
+.notice:last-child{border:0}
+.dot{width:8px;height:8px;border-radius:50%;background:#111;flex-shrink:0}
+.empty{text-align:center;padding:24px;color:#888;font-size:14px}
+footer{text-align:center;color:#999;font-size:11px;padding:15px}
+@media(min-width:700px){.container{padding-bottom:35px}nav{position:sticky;bottom:0;border:1px solid #ddd;border-radius:12px;margin:0 auto 15px;max-width:680px}}
 </style>
 </head>
 <body>
+
 <header>
-<div class="logo">V</div>
-<h1>VEXORA</h1>
-<p class="small">YOUR SOCIAL WORLD</p>
+<div class="logo"><span>V</span> VEXORA</div>
+<div class="header-right">YOUR SOCIAL WORLD</div>
 </header>
 
 <div class="container">
-<section class="card" id="auth">
-<h2>VEXORA'ya Katıl</h2>
-<input id="fullname" placeholder="Adın ve soyadın">
-<input id="username" placeholder="Kullanıcı adın">
+
+<section id="auth" class="card">
+<h2>VEXORA'ya Hoş Geldin</h2>
+<p class="small">Sosyal dünyana katıl.</p>
+<input id="fullName" placeholder="Adın ve soyadın">
+<input id="userName" placeholder="Kullanıcı adın">
 <input id="email" type="email" placeholder="E-posta adresin">
-<input id="password" type="password" placeholder="Şifren (en az 8 karakter)">
-<button style="width:100%" onclick="signup()">Ücretsiz Hesap Oluştur</button>
-<button class="secondary" style="width:100%;margin-top:8px" onclick="login()">Giriş Yap</button>
-<div id="authMessage"></div>
+<input id="password" type="password" placeholder="Şifren">
+<button onclick="signup()">Hesap Oluştur</button>
+<button class="light" onclick="login()">Giriş Yap</button>
+<div id="authMsg" class="message"></div>
 </section>
 
 <section id="app">
+
 <div id="homePage" class="page active">
 <div class="card">
-<h2>VEXORA Akışı</h2>
-<div id="feed"><div class="empty">Paylaşımlar yükleniyor...</div></div>
-<button class="secondary" style="width:100%" onclick="loadFeed()">Akışı Yenile</button>
+<h2>Akış</h2>
+<div id="feed"><div class="empty">Yükleniyor...</div></div>
+<button class="outline" style="width:100%" onclick="loadFeed()">Akışı Yenile</button>
 </div>
 </div>
 
 <div id="explorePage" class="page">
 <div class="card">
 <h2>Keşfet</h2>
-<input id="searchUsers" class="search-box" placeholder="Kullanıcı ara..." oninput="filterExploreUsers()">
-<div id="exploreList">Kullanıcılar yükleniyor...</div>
-<button class="secondary" style="width:100%" onclick="loadExploreUsers()">Yenile</button>
+<input id="userSearch" placeholder="İsim veya kullanıcı adı ara..." oninput="filterUsers()">
+<div id="usersList"></div>
 </div>
 <div id="userDetail"></div>
 </div>
 
 <div id="sharePage" class="page">
 <div class="card">
-<h2>Yeni Paylaşım</h2>
-<textarea id="postContent" maxlength="2000" placeholder="Aklından neler geçiyor?"></textarea>
-<label class="small">Fotoğraf veya video seç</label>
+<h2>Yeni paylaşım</h2>
+<textarea id="postText" maxlength="2000" placeholder="Neler düşünüyorsun?"></textarea>
+<label>Fotoğraf veya video seç</label>
 <input id="postFile" type="file" accept="image/*,video/*">
-<button style="width:100%" onclick="createPost()">Paylaş</button>
-<div id="shareMessage"></div>
+<button style="width:100%" onclick="publishPost()">Paylaş</button>
+<div id="shareMsg" class="message"></div>
 </div>
 </div>
 
 <div id="messagesPage" class="page">
 <div class="card">
 <h2>Mesajlar</h2>
-<div class="empty">Mesajlaşma özelliği yakında!</div>
+<input id="chatSearch" placeholder="Mesaj göndermek için kullanıcı ara..." oninput="searchChatUsers()">
+<div id="chatSearchResults"></div>
+<h3 style="margin-top:18px">Sohbetlerin</h3>
+<div id="chatList"><div class="empty">Sohbetlerin burada görünecek.</div></div>
+</div>
+<div id="chatWindow" class="card hidden">
+<h3 id="chatTitle">Sohbet</h3>
+<div id="chatMessages" class="chat-box"></div>
+<div class="chat-send">
+<input id="chatInput" maxlength="5000" placeholder="Mesajını yaz...">
+<button onclick="sendMessage()">Gönder</button>
+</div>
+<div id="chatMsg" class="message"></div>
+</div>
+</div>
+
+<div id="notificationsPage" class="page">
+<div class="card">
+<h2>Bildirimler</h2>
+<div id="notificationList"></div>
+<button class="outline" style="width:100%" onclick="loadNotifications()">Yenile</button>
 </div>
 </div>
 
 <div id="profilePage" class="page">
 <div class="card profile">
-<img id="avatar" class="avatar" alt="Profil fotoğrafı">
-<h2 id="displayName">VEXORA Kullanıcısı</h2>
-<p id="displayUsername" class="small"></p>
-<p id="displayBio"></p>
-<div class="stats">
-<div><strong id="myFollowers">0</strong><span>Takipçi</span></div>
-<div><strong id="myFollowing">0</strong><span>Takip</span></div>
-<div><strong id="myPosts">0</strong><span>Paylaşım</span></div>
+<img id="myAvatar" class="avatar" alt="Profil fotoğrafı">
+<h2 id="myName">Profilim</h2>
+<p id="myUsername" class="small"></p>
+<p id="myBio"></p>
+<div class="profile-stats">
+<div><strong id="followersCount">0</strong><span>Takipçi</span></div>
+<div><strong id="followingCount">0</strong><span>Takip</span></div>
+<div><strong id="postsCount">0</strong><span>Paylaşım</span></div>
 </div>
+<button class="outline" onclick="loadMyFollowLists()">Takipçiler / Takip</button>
+<div id="myFollowLists"></div>
 </div>
 <div class="card">
-<h2>Profilini Düzenle</h2>
-<label class="small">Profil fotoğrafın</label>
-<input id="avatarFile" type="file" accept="image/*">
-<label class="small">Adın ve soyadın</label>
-<input id="editFullname" placeholder="Adın ve soyadın">
-<label class="small">Kullanıcı adın</label>
-<input id="editUsername" placeholder="Kullanıcı adın">
-<label class="small">Biyografin</label>
+<h3>Profili düzenle</h3>
+<label>Ad soyad</label>
+<input id="editName" placeholder="Adın ve soyadın">
+<label>Kullanıcı adı</label>
+<input id="editUser" placeholder="Kullanıcı adın">
+<label>Biyografi</label>
 <textarea id="editBio" maxlength="250" placeholder="Kendinden bahset..."></textarea>
+<label>Profil fotoğrafı</label>
+<input id="avatarFile" type="file" accept="image/*">
 <button style="width:100%" onclick="saveProfile()">Profili Kaydet</button>
-<div id="profileMessage"></div>
+<div id="profileMsg" class="message"></div>
 </div>
 <div class="card">
-<h2>Paylaşımlarım</h2>
-<div id="myPostsList"></div>
+<h3>Paylaşımlarım</h3>
+<div id="myPosts"></div>
 </div>
-<button class="secondary" style="width:100%;margin-bottom:15px" onclick="logout()">Çıkış Yap</button>
+<button class="light" style="width:100%;margin-bottom:15px" onclick="logout()">Çıkış Yap</button>
 </div>
 
 <nav>
-<button id="nav-home" class="active" onclick="openTab('home')">⌂ Ana Sayfa</button>
-<button id="nav-explore" onclick="openTab('explore')">⌕ Keşfet</button>
-<button id="nav-share" onclick="openTab('share')">＋ Paylaş</button>
-<button id="nav-messages" onclick="openTab('messages')">✉ Mesajlar</button>
-<button id="nav-profile" onclick="openTab('profile')">♙ Profil</button>
+<button id="nav-home" class="active" onclick="openTab('home')">⌂<br>Ana Sayfa</button>
+<button id="nav-explore" onclick="openTab('explore')">⌕<br>Keşfet</button>
+<button id="nav-share" onclick="openTab('share')">＋<br>Paylaş</button>
+<button id="nav-messages" onclick="openTab('messages')">✉<br>Mesajlar</button>
+<button id="nav-notifications" onclick="openTab('notifications')">♧<br>Bildirim</button>
+<button id="nav-profile" onclick="openTab('profile')">♙<br>Profil</button>
 </nav>
 </section>
 </div>
-<footer>© 2026 VEXORA · Sosyal dünyanın yeni adresi</footer>
+<footer>© 2026 VEXORA · Your Social World</footer>
 
 <script>
 const SUPABASE_URL="https://coyobsmidxswejusrnca.supabase.co";
 const SUPABASE_KEY="sb_publishable_ePwGpBQ3VJEeTer_FVtRQQ_AMEXlHhF";
-const client=window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
+const db=window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
 
-let currentUser=null;
-let exploreUsers=[];
-let currentProfile=null;
+let me=null;
+let myProfile=null;
+let users=[];
+let activeChat=null;
+let chatTimer=null;
+const placeholder="https://placehold.co/150x150/f0f0f0/333?text=V";
 
-const fallbackAvatar="https://placehold.co/200x200/171717/e6bd63?text=V";
-
-function message(id,text){
-const el=document.getElementById(id);
-if(el) el.textContent=text;
-}
-
-function safe(value){
-return String(value??"").replace(/[&<>"']/g,c=>({
-"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"
-}[c]));
-}
-
-function formatDate(value){
-return new Date(value).toLocaleString("tr-TR");
-}
-
-function showApp(user){
-currentUser=user||null;
-document.getElementById("auth").style.display=user?"none":"block";
-document.getElementById("app").style.display=user?"block":"none";
-if(user){
-loadProfile();
-loadFeed();
-}
-}
+function el(id){return document.getElementById(id)}
+function msg(id,t){if(el(id))el(id).textContent=t}
+function esc(s){return String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]))}
+function date(s){return new Date(s).toLocaleString("tr-TR")}
+function avatar(p){return esc(p?.avatar_url||placeholder)}
+function notifyError(id,e){msg(id,e?.message||"Bir hata oluştu.")}
 
 async function signup(){
-const fullname=document.getElementById("fullname").value.trim();
-const username=document.getElementById("username").value.trim();
-const email=document.getElementById("email").value.trim();
-const password=document.getElementById("password").value;
-
-if(!fullname||!username||!email||!password){
-message("authMessage","Bütün alanları doldur.");
-return;
-}
-if(password.length<8){
-message("authMessage","Şifre en az 8 karakter olmalı.");
-return;
-}
-if(!/^[a-zA-Z0-9_]+$/.test(username)){
-message("authMessage","Kullanıcı adında yalnızca harf, rakam ve _ kullan.");
-return;
-}
-message("authMessage","Hesabın oluşturuluyor...");
-
-const {data,error}=await client.auth.signUp({
+const full_name=el("fullName").value.trim();
+const username=el("userName").value.trim();
+const email=el("email").value.trim();
+const password=el("password").value;
+if(!full_name||!username||!email||!password)return msg("authMsg","Bütün alanları doldur.");
+if(password.length<8)return msg("authMsg","Şifre en az 8 karakter olmalı.");
+if(!/^[a-zA-Z0-9_]+$/.test(username))return msg("authMsg","Kullanıcı adı yalnızca harf, rakam ve _ içerebilir.");
+msg("authMsg","Hesap oluşturuluyor...");
+const {data,error}=await db.auth.signUp({
 email,password,
-options:{
-emailRedirectTo:location.origin+location.pathname,
-data:{username,full_name:fullname}
-}
+options:{emailRedirectTo:location.origin+location.pathname,data:{full_name,username}}
 });
-if(error){
-message("authMessage","Hata: "+error.message);
-return;
-}
-if(data.session){
-showApp(data.session.user);
-}else{
-message("authMessage","Kayıt başarılı! E-postanı doğrula, ardından giriş yap.");
-}
+if(error)return notifyError("authMsg",error);
+if(data.session){await startApp(data.session.user)}
+else msg("authMsg","Kayıt oluşturuldu. E-postanı doğruladıktan sonra giriş yap.");
 }
 
 async function login(){
-const email=document.getElementById("email").value.trim();
-const password=document.getElementById("password").value;
-if(!email||!password){
-message("authMessage","E-posta ve şifreni gir.");
-return;
+const email=el("email").value.trim(),password=el("password").value;
+if(!email||!password)return msg("authMsg","E-posta ve şifreni gir.");
+msg("authMsg","Giriş yapılıyor...");
+const {data,error}=await db.auth.signInWithPassword({email,password});
+if(error)return notifyError("authMsg",error);
+await startApp(data.user);
 }
-message("authMessage","Giriş yapılıyor...");
-const {data,error}=await client.auth.signInWithPassword({email,password});
-if(error){
-message("authMessage","Giriş hatası: "+error.message);
-return;
-}
-showApp(data.user);
+
+async function startApp(user){
+me=user;
+el("auth").style.display="none";
+el("app").style.display="block";
+await loadProfile();
+await loadFeed();
 }
 
 async function loadProfile(){
-if(!currentUser)return;
-const {data,error}=await client.from("profiles")
-.select("username,full_name,bio,avatar_url")
-.eq("id",currentUser.id).maybeSingle();
-
-if(error){
-message("profileMessage","Profil yüklenemedi: "+error.message);
-return;
-}
-if(!data){
-message("profileMessage","Profil kaydı bulunamadı.");
-return;
-}
-currentProfile=data;
-document.getElementById("editFullname").value=data.full_name||"";
-document.getElementById("editUsername").value=data.username||"";
-document.getElementById("editBio").value=data.bio||"";
-document.getElementById("displayName").textContent=data.full_name||"VEXORA Kullanıcısı";
-document.getElementById("displayUsername").textContent=data.username?"@"+data.username:"";
-document.getElementById("displayBio").textContent=data.bio||"";
-document.getElementById("avatar").src=data.avatar_url||fallbackAvatar;
-await loadMyStats();
+if(!me)return;
+const {data,error}=await db.from("profiles").select("*").eq("id",me.id).maybeSingle();
+if(error){msg("profileMsg",error.message);return}
+myProfile=data;
+if(!data)return;
+el("myName").textContent=data.full_name||"VEXORA";
+el("myUsername").textContent="@"+(data.username||"");
+el("myBio").textContent=data.bio||"";
+el("myAvatar").src=data.avatar_url||placeholder;
+el("editName").value=data.full_name||"";
+el("editUser").value=data.username||"";
+el("editBio").value=data.bio||"";
+await loadStats();
 await loadMyPosts();
 }
 
-async function loadMyStats(){
-if(!currentUser)return;
-const [followers,following,posts]=await Promise.all([
-client.from("follows").select("*",{count:"exact",head:true}).eq("following_id",currentUser.id),
-client.from("follows").select("*",{count:"exact",head:true}).eq("follower_id",currentUser.id),
-client.from("posts").select("*",{count:"exact",head:true}).eq("user_id",currentUser.id)
+async function loadStats(){
+const [f,following,p]=await Promise.all([
+db.from("follows").select("*",{count:"exact",head:true}).eq("following_id",me.id),
+db.from("follows").select("*",{count:"exact",head:true}).eq("follower_id",me.id),
+db.from("posts").select("*",{count:"exact",head:true}).eq("user_id",me.id)
 ]);
-document.getElementById("myFollowers").textContent=followers.count??0;
-document.getElementById("myFollowing").textContent=following.count??0;
-document.getElementById("myPosts").textContent=posts.count??0;
+el("followersCount").textContent=f.count??0;
+el("followingCount").textContent=following.count??0;
+el("postsCount").textContent=p.count??0;
 }
 
 async function saveProfile(){
-if(!currentUser)return;
-const fullname=document.getElementById("editFullname").value.trim();
-const username=document.getElementById("editUsername").value.trim();
-const bio=document.getElementById("editBio").value.trim();
-const file=document.getElementById("avatarFile").files[0];
-
-if(!fullname||!username){
-message("profileMessage","Ad ve kullanıcı adı boş bırakılamaz.");
-return;
-}
-if(!/^[a-zA-Z0-9_]+$/.test(username)){
-message("profileMessage","Kullanıcı adında yalnızca harf, rakam ve _ kullan.");
-return;
-}
-message("profileMessage","Profil kaydediliyor...");
-let avatarUrl=null;
-
+const full_name=el("editName").value.trim();
+const username=el("editUser").value.trim();
+const bio=el("editBio").value.trim();
+const file=el("avatarFile").files[0];
+if(!full_name||!username)return msg("profileMsg","Ad ve kullanıcı adı gerekli.");
+if(!/^[a-zA-Z0-9_]+$/.test(username))return msg("profileMsg","Kullanıcı adı yalnızca harf, rakam ve _ içerebilir.");
+let avatar_url=myProfile?.avatar_url||null;
 if(file){
-if(!file.type.startsWith("image/")){
-message("profileMessage","Lütfen resim dosyası seç.");
-return;
+if(!file.type.startsWith("image/"))return msg("profileMsg","Bir fotoğraf seçmelisin.");
+if(file.size>5*1024*1024)return msg("profileMsg","Fotoğraf 5 MB'dan küçük olmalı.");
+const ext=file.name.split(".").pop().toLowerCase();
+const path=me.id+"/"+Date.now()+"."+ext;
+const {error}=await db.storage.from("avatars").upload(path,file);
+if(error)return notifyError("profileMsg",error);
+avatar_url=db.storage.from("avatars").getPublicUrl(path).data.publicUrl;
 }
-if(file.size>5*1024*1024){
-message("profileMessage","Fotoğraf en fazla 5 MB olabilir.");
-return;
-}
-const extension=file.name.split(".").pop().toLowerCase();
-const path=currentUser.id+"/"+Date.now()+"."+extension;
-const {error:uploadError}=await client.storage.from("avatars")
-.upload(path,file,{upsert:false});
-if(uploadError){
-message("profileMessage","Fotoğraf yüklenemedi: "+uploadError.message);
-return;
-}
-const {data:urlData}=client.storage.from("avatars").getPublicUrl(path);
-avatarUrl=urlData.publicUrl;
-}
-
-const updates={full_name:fullname,username,bio};
-if(avatarUrl)updates.avatar_url=avatarUrl;
-
-const {error}=await client.from("profiles").update(updates).eq("id",currentUser.id);
-if(error){
-message("profileMessage","Kaydetme hatası: "+error.message);
-return;
-}
-document.getElementById("avatarFile").value="";
-message("profileMessage","Profilin başarıyla kaydedildi!");
+const update={full_name,username,bio,avatar_url};
+const {error}=await db.from("profiles").update(update).eq("id",me.id);
+if(error)return notifyError("profileMsg",error);
+msg("profileMsg","Profil güncellendi!");
+el("avatarFile").value="";
 await loadProfile();
 }
 
-async function createPost(){
-if(!currentUser)return;
-const content=document.getElementById("postContent").value.trim();
-const file=document.getElementById("postFile").files[0];
-if(!content&&!file){
-message("shareMessage","Bir yazı veya fotoğraf/video ekle.");
-return;
-}
-message("shareMessage","Paylaşım yükleniyor...");
-let imageUrl=null;
-let videoUrl=null;
-
-if(file){
-if(!file.type.startsWith("image/")&&!file.type.startsWith("video/")){
-message("shareMessage","Desteklenmeyen dosya türü.");
-return;
-}
-if(file.size>50*1024*1024){
-message("shareMessage","Dosya en fazla 50 MB olabilir.");
-return;
-}
-const extension=file.name.split(".").pop().toLowerCase();
-const path=currentUser.id+"/"+Date.now()+"."+extension;
-const {error:uploadError}=await client.storage.from("posts")
-.upload(path,file,{upsert:false});
-if(uploadError){
-message("shareMessage","Dosya yüklenemedi: "+uploadError.message);
-return;
-}
-const {data:urlData}=client.storage.from("posts").getPublicUrl(path);
-if(file.type.startsWith("image/"))imageUrl=urlData.publicUrl;
-else videoUrl=urlData.publicUrl;
+async function uploadPostFile(file){
+if(!file)return {image_url:null,video_url:null};
+if(!file.type.startsWith("image/")&&!file.type.startsWith("video/"))throw Error("Fotoğraf veya video seç.");
+if(file.size>50*1024*1024)throw Error("Dosya en fazla 50 MB olabilir.");
+const ext=file.name.split(".").pop().toLowerCase();
+const path=me.id+"/"+Date.now()+"."+ext;
+const {error}=await db.storage.from("posts").upload(path,file);
+if(error)throw error;
+const url=db.storage.from("posts").getPublicUrl(path).data.publicUrl;
+return file.type.startsWith("image/")?{image_url:url,video_url:null}:{image_url:null,video_url:url};
 }
 
-const {error}=await client.from("posts").insert({
-user_id:currentUser.id,
-content,
-image_url:imageUrl,
-video_url:videoUrl
-});
-if(error){
-message("shareMessage","Paylaşım hatası: "+error.message);
-return;
-}
-document.getElementById("postContent").value="";
-document.getElementById("postFile").value="";
-message("shareMessage","Paylaşımın yayınlandı!");
-await loadFeed();
-openTab("home");
+async function publishPost(){
+const content=el("postText").value.trim(),file=el("postFile").files[0];
+if(!content&&!file)return msg("shareMsg","Bir yazı veya medya ekle.");
+msg("shareMsg","Paylaşım yükleniyor...");
+try{
+const media=await uploadPostFile(file);
+const {error}=await db.from("posts").insert({user_id:me.id,content,...media});
+if(error)throw error;
+el("postText").value="";el("postFile").value="";
+msg("shareMsg","Paylaşım yayınlandı!");
+await loadFeed();openTab("home");
+}catch(e){notifyError("shareMsg",e)}
 }
 
 async function getProfiles(ids){
-const unique=[...new Set(ids.filter(Boolean))];
-if(!unique.length)return {};
-const {data,error}=await client.from("profiles")
-.select("id,username,full_name,bio,avatar_url").in("id",unique);
-if(error)return {};
-const map={};
-(data||[]).forEach(p=>map[p.id]=p);
-return map;
+const clean=[...new Set(ids.filter(Boolean))];
+if(!clean.length)return {};
+const {data}=await db.from("profiles").select("id,username,full_name,bio,avatar_url").in("id",clean);
+const result={};(data||[]).forEach(p=>result[p.id]=p);return result;
 }
 
-function renderPost(post,profile){
-const name=safe(profile?.full_name||"VEXORA Kullanıcısı");
-const username=safe(profile?.username||"");
-const avatar=safe(profile?.avatar_url||fallbackAvatar);
+async function getLikeData(postIds){
+const {data}=await db.from("likes").select("post_id,user_id").in("post_id",postIds);
+return data||[];
+}
+
+async function renderPosts(posts,profiles,container){
+if(!posts.length){container.innerHTML='<div class="empty">Henüz paylaşım yok.</div>';return}
+const likes=await getLikeData(posts.map(p=>p.id));
+const commentsResult=await db.from("comments").select("*").in("post_id",posts.map(p=>p.id)).order("created_at",{ascending:true});
+const comments=commentsResult.data||[];
+const commentProfiles=await getProfiles(comments.map(c=>c.user_id));
+container.innerHTML=posts.map(p=>{
+const user=profiles[p.user_id]||{};
+const postLikes=likes.filter(l=>l.post_id===p.id);
+const liked=postLikes.some(l=>l.user_id===me.id);
+const postComments=comments.filter(c=>c.post_id===p.id);
 let media="";
-if(post.image_url){
-media=`<img class="post-media" src="${safe(post.image_url)}" alt="Paylaşım fotoğrafı">`;
-}
-if(post.video_url){
-media=`<video class="post-media" controls playsinline src="${safe(post.video_url)}"></video>`;
-}
+if(p.image_url)media=`<img class="post-media" src="${esc(p.image_url)}" alt="Paylaşım">`;
+if(p.video_url)media=`<video class="post-media" controls playsinline src="${esc(p.video_url)}"></video>`;
 return `<article class="post">
 <div class="post-head">
-<img class="post-avatar" src="${avatar}" alt="">
-<div><strong>${name}</strong><div class="small">@${username}</div></div>
+<img class="post-avatar" src="${avatar(user)}" alt="">
+<div class="who"><strong>${esc(user.full_name||"VEXORA kullanıcısı")}</strong><div class="small">@${esc(user.username||"")}</div></div>
 </div>
-${post.content?`<div class="post-content">${safe(post.content)}</div>`:""}
+${p.content?`<div class="post-text">${esc(p.content)}</div>`:""}
 ${media}
-<div class="post-date">${formatDate(post.created_at)}</div>
+<div class="post-actions">
+<button class="${liked?"":"light"}" onclick="toggleLike('${p.id}','${p.user_id}')">${liked?"♥ Beğendin":"♡ Beğen"} · ${postLikes.length}</button>
+<button class="light" onclick="toggleComments('${p.id}')">Yorum · ${postComments.length}</button>
+</div>
+<div id="comments-${p.id}" class="comments hidden">
+<div>${postComments.map(c=>`<div class="comment-row"><strong>${esc(commentProfiles[c.user_id]?.username||"Kullanıcı")}</strong>: ${esc(c.content)} ${c.user_id===me.id?`<button class="light" onclick="deleteComment('${c.id}','${p.id}')">Sil</button>`:""}</div>`).join("")||'<span class="small">Henüz yorum yok.</span>'}</div>
+<div class="comment-form"><input id="comment-input-${p.id}" maxlength="1000" placeholder="Yorum yaz..."><button onclick="addComment('${p.id}','${p.user_id}')">Gönder</button></div>
+</div>
+<div class="post-date">${date(p.created_at)}</div>
 </article>`;
+}).join("");
 }
 
 async function loadFeed(){
-const feed=document.getElementById("feed");
-feed.innerHTML='<div class="empty">Paylaşımlar yükleniyor...</div>';
-const {data,error}=await client.from("posts")
-.select("id,user_id,content,image_url,video_url,created_at")
-.order("created_at",{ascending:false}).limit(50);
-if(error){
-feed.innerHTML='<div class="empty">Akış yüklenemedi: '+safe(error.message)+'</div>';
-return;
-}
-if(!data||!data.length){
-feed.innerHTML='<div class="empty">Henüz paylaşım yok. İlk paylaşımı sen yap!</div>';
-return;
-}
-const profiles=await getProfiles(data.map(p=>p.user_id));
-feed.innerHTML=data.map(p=>renderPost(p,profiles[p.user_id])).join("");
+const feed=el("feed");feed.innerHTML='<div class="empty">Akış yükleniyor...</div>';
+const {data,error}=await db.from("posts").select("*").order("created_at",{ascending:false}).limit(50);
+if(error){feed.textContent="Akış yüklenemedi: "+error.message;return}
+const profiles=await getProfiles((data||[]).map(p=>p.user_id));
+await renderPosts(data||[],profiles,feed);
 }
 
-async function loadExploreUsers(){
-const list=document.getElementById("exploreList");
-list.textContent="Kullanıcılar yükleniyor...";
-const {data,error}=await client.from("profiles")
-.select("id,username,full_name,bio,avatar_url")
-.order("created_at",{ascending:false}).limit(500);
-if(error){
-list.textContent="Kullanıcılar yüklenemedi: "+error.message;
-return;
+async function toggleLike(postId,ownerId){
+const {data:existing,error}=await db.from("likes").select("user_id").eq("post_id",postId).eq("user_id",me.id).maybeSingle();
+if(error)return alert(error.message);
+if(existing){
+const {error:e}=await db.from("likes").delete().eq("post_id",postId).eq("user_id",me.id);
+if(e)return alert(e.message);
+}else{
+const {error:e}=await db.from("likes").insert({post_id:postId,user_id:me.id});
+if(e)return alert(e.message);
+if(ownerId!==me.id)await createNotification(ownerId,"like",postId);
 }
-exploreUsers=(data||[]);
-filterExploreUsers();
+await refreshVisiblePosts();
 }
 
-function filterExploreUsers(){
-const term=(document.getElementById("searchUsers").value||"").toLocaleLowerCase("tr-TR");
-const list=document.getElementById("exploreList");
-const filtered=exploreUsers.filter(u=>
-(u.full_name||"").toLocaleLowerCase("tr-TR").includes(term)||
-(u.username||"").toLocaleLowerCase("tr-TR").includes(term)
-);
-if(!filtered.length){
-list.innerHTML='<div class="empty">Kullanıcı bulunamadı.</div>';
-return;
+async function refreshVisiblePosts(){
+const active=document.querySelector(".page.active")?.id;
+if(active==="homePage")await loadFeed();
+else if(active==="profilePage")await loadMyPosts();
+else if(active==="explorePage"&&currentViewedUser)await openUserProfile(currentViewedUser);
 }
-list.innerHTML=filtered.map(u=>`
-<div class="explore-user">
-<img class="explore-avatar" src="${safe(u.avatar_url||fallbackAvatar)}" alt="">
-<div class="explore-info">
-<strong>${safe(u.full_name||"VEXORA Kullanıcısı")}</strong>
-<span>@${safe(u.username||"")}</span>
-</div>
+
+function toggleComments(id){el("comments-"+id).classList.toggle("hidden")}
+
+async function addComment(postId,ownerId){
+const input=el("comment-input-"+postId),content=input.value.trim();
+if(!content)return;
+const {error}=await db.from("comments").insert({post_id:postId,user_id:me.id,content});
+if(error)return alert(error.message);
+if(ownerId!==me.id)await createNotification(ownerId,"comment",postId);
+await refreshVisiblePosts();
+setTimeout(()=>{const box=el("comments-"+postId);if(box)box.classList.remove("hidden")},100);
+}
+
+async function deleteComment(id,postId){
+if(!confirm("Yorumu silmek istiyor musun?"))return;
+const {error}=await db.from("comments").delete().eq("id",id).eq("user_id",me.id);
+if(error)return alert(error.message);
+await refreshVisiblePosts();
+}
+
+async function createNotification(recipient_id,type,post_id=null){
+if(!recipient_id||recipient_id===me.id)return;
+const {error}=await db.from("notifications").insert({recipient_id,actor_id:me.id,type,post_id});
+if(error)console.warn("Bildirim kaydedilemedi:",error.message);
+}
+
+async function loadExplore(){
+const {data,error}=await db.from("profiles").select("*").order("created_at",{ascending:false}).limit(500);
+if(error){el("usersList").textContent=error.message;return}
+users=data||[];filterUsers();
+}
+
+function filterUsers(){
+const q=(el("userSearch").value||"").toLocaleLowerCase("tr-TR");
+const filtered=users.filter(u=>(u.full_name||"").toLocaleLowerCase("tr-TR").includes(q)||(u.username||"").toLocaleLowerCase("tr-TR").includes(q));
+el("usersList").innerHTML=filtered.map(u=>`
+<div class="user-row">
+<img src="${avatar(u)}" alt="">
+<div class="info"><strong>${esc(u.full_name||"Kullanıcı")}</strong><span>@${esc(u.username||"")}</span></div>
 <button onclick="openUserProfile('${u.id}')">Profili Gör</button>
-</div>`).join("");
+</div>`).join("")||'<div class="empty">Kullanıcı bulunamadı.</div>';
 }
 
-async function openUserProfile(userId){
-const target=exploreUsers.find(u=>u.id===userId);
-if(!target)return;
-const detail=document.getElementById("userDetail");
-detail.innerHTML='<div class="card">Profil yükleniyor...</div>';
-const [followers,following,posts,followStatus]=await Promise.all([
-client.from("follows").select("*",{count:"exact",head:true}).eq("following_id",userId),
-client.from("follows").select("*",{count:"exact",head:true}).eq("follower_id",userId),
-client.from("posts").select("id,user_id,content,image_url,video_url,created_at").eq("user_id",userId).order("created_at",{ascending:false}).limit(50),
-client.from("follows").select("follower_id").eq("follower_id",currentUser.id).eq("following_id",userId).maybeSingle()
+let currentViewedUser=null;
+async function openUserProfile(id){
+currentViewedUser=id;
+const u=users.find(x=>x.id===id)||((myProfile&&id===me.id)?{...myProfile,id:me.id}:null);
+if(!u)return;
+const area=el("userDetail");area.innerHTML='<div class="card empty">Profil açılıyor...</div>';
+const [f,following,posts,check]=await Promise.all([
+db.from("follows").select("*",{count:"exact",head:true}).eq("following_id",id),
+db.from("follows").select("*",{count:"exact",head:true}).eq("follower_id",id),
+db.from("posts").select("*").eq("user_id",id).order("created_at",{ascending:false}).limit(50),
+db.from("follows").select("follower_id").eq("follower_id",me.id).eq("following_id",id).maybeSingle()
 ]);
-if(posts.error){
-detail.innerHTML='<div class="card">Paylaşımlar yüklenemedi: '+safe(posts.error.message)+'</div>';
-return;
-}
-const isFollowing=!!followStatus.data;
-const profilePosts=(posts.data||[]);
-detail.innerHTML=`
-<div class="card profile">
-<img class="avatar" src="${safe(target.avatar_url||fallbackAvatar)}" alt="">
-<h2>${safe(target.full_name||"VEXORA Kullanıcısı")}</h2>
-<p class="small">@${safe(target.username||"")}</p>
-<p>${safe(target.bio||"")}</p>
-<div class="stats">
-<div><strong>${followers.count??0}</strong><span>Takipçi</span></div>
+const isFollowing=!!check.data;
+area.innerHTML=`<div class="card profile">
+<img class="avatar" src="${avatar(u)}" alt="">
+<h2>${esc(u.full_name||"Kullanıcı")}</h2>
+<p class="small">@${esc(u.username||"")}</p>
+<p>${esc(u.bio||"")}</p>
+<div class="profile-stats">
+<div><strong>${f.count??0}</strong><span>Takipçi</span></div>
 <div><strong>${following.count??0}</strong><span>Takip</span></div>
-<div><strong>${posts.count??0}</strong><span>Paylaşım</span></div>
+<div><strong>${posts.data?.length||0}</strong><span>Paylaşım</span></div>
 </div>
 <div class="profile-actions">
-${userId!==currentUser.id?`<button id="followButton" onclick="toggleFollow('${userId}')">${isFollowing?"Takibi Bırak":"Takip Et"}</button>`:""}
-<button class="secondary" onclick="closeUserProfile()">Kapat</button>
-</div>
-<div id="detailMessage"></div>
-</div>
-<div class="detail-posts">${profilePosts.length?profilePosts.map(p=>renderPost(p,target)).join(""):'<div class="card empty">Henüz paylaşım yok.</div>'}</div>`;
-currentProfile=target;
+${id!==me.id?`<button id="followBtn" onclick="toggleFollow('${id}')">${isFollowing?"Takibi Bırak":"Takip Et"}</button><button class="outline" onclick="startChat('${id}')">Mesaj Gönder</button>`:""}
+<button class="light" onclick="el('userDetail').innerHTML=''">Kapat</button>
+</div></div><div id="otherPosts"></div>`;
+if(posts.error){el("otherPosts").textContent=posts.error.message;return}
+await renderPosts(posts.data||{length:0}, {[id]:u}, el("otherPosts"));
 }
 
-async function toggleFollow(userId){
-if(!currentUser||userId===currentUser.id)return;
-const button=document.getElementById("followButton");
-if(button)button.disabled=true;
-const {data:existing,error:checkError}=await client.from("follows")
-.select("follower_id").eq("follower_id",currentUser.id)
-.eq("following_id",userId).maybeSingle();
-
-if(checkError){
-message("detailMessage","Takip durumu kontrol edilemedi: "+checkError.message);
-if(button)button.disabled=false;
-return;
-}
-let result;
+async function toggleFollow(id){
+const {data:existing,error}=await db.from("follows").select("follower_id").eq("follower_id",me.id).eq("following_id",id).maybeSingle();
+if(error)return alert(error.message);
 if(existing){
-result=await client.from("follows").delete()
-.eq("follower_id",currentUser.id).eq("following_id",userId);
+const {error:e}=await db.from("follows").delete().eq("follower_id",me.id).eq("following_id",id);
+if(e)return alert(e.message);
 }else{
-result=await client.from("follows").insert({
-follower_id:currentUser.id,
-following_id:userId
-});
+const {error:e}=await db.from("follows").insert({follower_id:me.id,following_id:id});
+if(e)return alert(e.message);
+await createNotification(id,"follow");
 }
-if(result.error){
-message("detailMessage","İşlem başarısız: "+result.error.message);
-if(button)button.disabled=false;
-return;
-}
-await openUserProfile(userId);
-await loadMyStats();
+await openUserProfile(id);
+await loadStats();
 }
 
-function closeUserProfile(){
-document.getElementById("userDetail").innerHTML="";
-currentProfile=null;
+async function loadMyFollowLists(){
+const area=el("myFollowLists");area.innerHTML='<div class="small">Listeler yükleniyor...</div>';
+const [followers,following]=await Promise.all([
+db.from("follows").select("follower_id").eq("following_id",me.id),
+db.from("follows").select("following_id").eq("follower_id",me.id)
+]);
+const ids=[...(followers.data||[]).map(x=>x.follower_id),...(following.data||[]).map(x=>x.following_id)];
+const profiles=await getProfiles(ids);
+area.innerHTML="<h3>Takipçiler</h3>"+(followers.data||[]).map(x=>miniUser(profiles[x.follower_id])).join("")+
+"<h3 style='margin-top:15px'>Takip ettiklerin</h3>"+(following.data||[]).map(x=>miniUser(profiles[x.following_id])).join("");
+if(!ids.length)area.innerHTML='<div class="empty">Henüz takipçi veya takip edilen yok.</div>';
+}
+
+function miniUser(u){
+if(!u)return "";
+return `<div class="user-row"><img src="${avatar(u)}"><div class="info"><strong>${esc(u.full_name)}</strong><span>@${esc(u.username)}</span></div></div>`;
 }
 
 async function loadMyPosts(){
-if(!currentUser)return;
-const area=document.getElementById("myPostsList");
-area.innerHTML='<div class="empty">Paylaşımların yükleniyor...</div>';
-const {data,error}=await client.from("posts")
-.select("id,user_id,content,image_url,video_url,created_at")
-.eq("user_id",currentUser.id).order("created_at",{ascending:false}).limit(50);
-if(error){
-area.textContent="Paylaşımlar yüklenemedi: "+error.message;
-return;
+const area=el("myPosts");
+const {data,error}=await db.from("posts").select("*").eq("user_id",me.id).order("created_at",{ascending:false}).limit(50);
+if(error){area.textContent=error.message;return}
+await renderPosts(data||[],{[me.id]:myProfile||{}},area);
 }
-if(!data||!data.length){
-area.innerHTML='<div class="empty">Henüz paylaşım yapmadın.</div>';
-return;
+
+async function loadNotifications(){
+const area=el("notificationList");area.innerHTML='<div class="empty">Bildirimler yükleniyor...</div>';
+const {data,error}=await db.from("notifications").select("*").eq("recipient_id",me.id).order("created_at",{ascending:false}).limit(100);
+if(error){area.textContent=error.message;return}
+if(!data?.length){area.innerHTML='<div class="empty">Henüz bildirimin yok.</div>';return}
+const profiles=await getProfiles(data.map(n=>n.actor_id));
+area.innerHTML=data.map(n=>{
+const actor=profiles[n.actor_id]||{};
+const label={follow:"seni takip etmeye başladı.",like:"paylaşımını beğendi.",comment:"paylaşımına yorum yaptı."}[n.type]||"etkileşimde bulundu.";
+return `<div class="notice"><span class="dot" style="opacity:${n.is_read?0.2:1}"></span><img class="post-avatar" src="${avatar(actor)}"><div><strong>${esc(actor.username||"Kullanıcı")}</strong> ${label}<div class="small">${date(n.created_at)}</div></div></div>`;
+}).join("");
+await db.from("notifications").update({is_read:true}).eq("recipient_id",me.id).eq("is_read",false);
 }
-area.innerHTML=data.map(p=>renderPost(p,currentProfile||{
-full_name:currentProfile?.full_name||document.getElementById("displayName").textContent,
-username:document.getElementById("editUsername").value,
-avatar_url:document.getElementById("avatar").src
-})).join("");
+
+async function searchChatUsers(){
+const q=el("chatSearch").value.trim().toLocaleLowerCase("tr-TR");
+if(q.length<2){el("chatSearchResults").innerHTML="";return}
+const {data,error}=await db.from("profiles").select("id,username,full_name,avatar_url").limit(500);
+if(error){el("chatSearchResults").textContent=error.message;return}
+const results=(data||[]).filter(u=>u.id!==me.id&&((u.username||"").toLocaleLowerCase("tr-TR").includes(q)||(u.full_name||"").toLocaleLowerCase("tr-TR").includes(q)));
+el("chatSearchResults").innerHTML=results.map(u=>`
+<div class="user-row"><img src="${avatar(u)}"><div class="info"><strong>${esc(u.full_name)}</strong><span>@${esc(u.username)}</span></div><button onclick="startChat('${u.id}')">Mesaj</button></div>`).join("")||'<div class="small">Kullanıcı bulunamadı.</div>';
 }
+
+async function loadChatList(){
+const {data,error}=await db.from("messages").select("*").or(`sender_id.eq.${me.id},receiver_id.eq.${me.id}`).order("created_at",{ascending:false}).limit(200);
+if(error){el("chatList").textContent=error.message;return}
+const latest={};
+(data||[]).forEach(m=>{
+const other=m.sender_id===me.id?m.receiver_id:m.sender_id;
+if(!latest[other])latest[other]=m;
+});
+const ids=Object.keys(latest);
+if(!ids.length){el("chatList").innerHTML='<div class="empty">Henüz sohbetin yok.</div>';return}
+const profiles=await getProfiles(ids);
+el("chatList").innerHTML=ids.map(id=>{
+const u=profiles[id]||{},m=latest[id];
+return `<div class="user-row"><img src="${avatar(u)}"><div class="info"><strong>${esc(u.full_name||"Kullanıcı")}</strong><span>${esc(m.content.slice(0,50))}</span></div><button onclick="startChat('${id}')">Aç</button></div>`;
+}).join("");
+}
+
+async function startChat(userId){
+activeChat=userId;
+const profile=users.find(u=>u.id===userId);
+let p=profile;
+if(!p){const {data}=await db.from("profiles").select("*").eq("id",userId).maybeSingle();p=data}
+el("chatWindow").classList.remove("hidden");
+el("chatTitle").textContent=p?.full_name||"Sohbet";
+await loadChatMessages();
+if(chatTimer)clearInterval(chatTimer);
+chatTimer=setInterval(()=>{if(activeChat)loadChatMessages()},10000);
+el("chatInput").focus();
+}
+
+async function loadChatMessages(){
+if(!activeChat)return;
+const {data,error}=await db.from("messages").select("*")
+.or(`and(sender_id.eq.${me.id},receiver_id.eq.${activeChat}),and(sender_id.eq.${activeChat},receiver_id.eq.${me.id})`)
+.order("created_at",{ascending:true}).limit(200);
+if(error){el("chatMessages").textContent=error.message;return}
+el("chatMessages").innerHTML=(data||[]).map(m=>`
+<div class="bubble ${m.sender_id===me.id?"mine":"theirs"}">${esc(m.content)}<small>${date(m.created_at)}</small></div>`).join("")||'<div class="empty">Sohbeti başlat.</div>';
+el("chatMessages").scrollTop=el("chatMessages").scrollHeight;
+const unread=(data||[]).filter(m=>m.receiver_id===me.id&&!m.read_at).map(m=>m.id);
+if(unread.length)await db.from("messages").update({read_at:new Date().toISOString()}).in("id",unread);
+}
+
+async function sendMessage(){
+const content=el("chatInput").value.trim();
+if(!content||!activeChat)return;
+const {error}=await db.from("messages").insert({sender_id:me.id,receiver_id:activeChat,content});
+if(error){msg("chatMsg",error.message);return}
+el("chatInput").value="";
+msg("chatMsg","");
+await loadChatMessages();
+await loadChatList();
+}
+
+el("chatInput").addEventListener("keydown",e=>{if(e.key==="Enter")sendMessage()});
 
 function openTab(tab){
 document.querySelectorAll(".page").forEach(p=>p.classList.remove("active"));
 document.querySelectorAll("nav button").forEach(b=>b.classList.remove("active"));
-document.getElementById(tab+"Page").classList.add("active");
-document.getElementById("nav-"+tab).classList.add("active");
-if(tab==="explore"&&exploreUsers.length===0)loadExploreUsers();
-if(tab==="profile")loadProfile();
+el(tab+"Page").classList.add("active");
+el("nav-"+tab).classList.add("active");
 if(tab==="home")loadFeed();
+if(tab==="explore")loadExplore();
+if(tab==="profile")loadProfile();
+if(tab==="notifications")loadNotifications();
+if(tab==="messages")loadChatList();
 }
 
 async function logout(){
-const {error}=await client.auth.signOut();
-if(error){
-message("profileMessage",error.message);
-return;
-}
-currentUser=null;
-showApp(null);
+if(chatTimer)clearInterval(chatTimer);
+const {error}=await db.auth.signOut();
+if(error)return alert(error.message);
+me=null;activeChat=null;
+el("app").style.display="none";
+el("auth").style.display="block";
 }
 
-client.auth.onAuthStateChange((_event,session)=>{
-showApp(session?.user||null);
+db.auth.onAuthStateChange((event,session)=>{
+if(event==="SIGNED_IN"&&session?.user){
+me=session.user;
+el("auth").style.display="none";
+el("app").style.display="block";
+}
+if(event==="SIGNED_OUT"){
+me=null;
+el("app").style.display="none";
+el("auth").style.display="block";
+}
 });
-client.auth.getSession().then(({data})=>{
-showApp(data.session?.user||null);
+
+db.auth.getSession().then(({data})=>{
+if(data.session)startApp(data.session.user);
 });
 </script>
 </body>
