@@ -4,29 +4,31 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>VEXORA - Your Social World</title>
+<title>WIVA - Your World</title>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
 *{box-sizing:border-box}
-body{margin:0;background:#f5f5f5;color:#171717;font-family:Arial,sans-serif}
+:root{--bg:#050509;--panel:#10101a;--panel2:#171725;--border:#29293b;--text:#f5f5ff;--muted:#9999b0;--blue:#38bdf8;--purple:#9b5cff}
+body{margin:0;background:var(--bg);color:var(--text);font-family:Arial,sans-serif}
 button,input,textarea{font:inherit}
-button{cursor:pointer;border:0;border-radius:9px;padding:11px 15px;background:#111;color:white;font-weight:700}
+button{cursor:pointer;border:0;border-radius:10px;padding:11px 15px;background:linear-gradient(110deg,#287bff,#8c42e8);color:white;font-weight:700}
 button:disabled{opacity:.5;cursor:not-allowed}
-button.light{background:#eee;color:#111}
-button.outline{background:white;color:#111;border:1px solid #ddd}
-header{height:65px;background:white;border-bottom:1px solid #e5e5e5;display:flex;align-items:center;justify-content:space-between;padding:0 max(16px,calc((100% - 950px)/2));position:sticky;top:0;z-index:10}
-.logo{font-size:27px;font-weight:900;letter-spacing:3px}
-.logo span{border:3px solid #111;border-radius:8px;padding:2px 6px;margin-right:5px}
-.header-right{font-size:12px;color:#777}
+button.light{background:#242438;color:#eee}
+button.outline{background:transparent;color:#eee;border:1px solid var(--border)}
+header{height:68px;background:#080810;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;padding:0 max(16px,calc((100% - 950px)/2));position:sticky;top:0;z-index:10}
+.logo{font-size:28px;font-weight:950;letter-spacing:4px;color:#fff;text-shadow:0 0 15px #487dff}
+.logo-a{position:relative;display:inline-block;color:#fff}
+.logo-a:after{content:"";position:absolute;width:8px;height:8px;border-radius:50%;background:#a66aff;box-shadow:0 0 8px #8b5cff,0 0 15px #38bdf8;left:50%;top:48%;transform:translate(-50%,-50%)}
+.header-right{font-size:11px;color:#aaa8d0;letter-spacing:2px}
 .container{max-width:680px;margin:20px auto;padding:0 12px 95px}
-.card,.post{background:white;border:1px solid #e8e8e8;border-radius:14px;padding:17px;margin-bottom:14px}
+.card,.post{background:var(--panel);border:1px solid var(--border);border-radius:16px;padding:17px;margin-bottom:14px;box-shadow:0 5px 25px #0005}
 h2{font-size:21px;margin:0 0 16px}
 h3{font-size:16px;margin:0}
-input,textarea{width:100%;padding:13px;border:1px solid #ddd;border-radius:9px;background:#fafafa;color:#111;margin:6px 0 12px;outline:none}
-input:focus,textarea:focus{border-color:#555}
-textarea{resize:vertical;min-height:75px}
-label{font-size:12px;color:#777}
-.small{font-size:12px;color:#777}
+input,textarea{width:100%;padding:13px;border:1px solid var(--border);border-radius:10px;background:#090912;color:white;margin:6px 0 12px;outline:none}
+input:focus,textarea:focus{border-color:#7660ff;box-shadow:0 0 0 2px #7650ff22}
+input::placeholder,textarea::placeholder{color:#77778e}
+label{font-size:12px;color:var(--muted)}
+.small{font-size:12px;color:var(--muted)}
 .muted{color:#888}
 .hidden{display:none!important}
 .page{display:none}
@@ -34,66 +36,66 @@ label{font-size:12px;color:#777}
 #app{display:none}
 #auth{max-width:420px;margin:35px auto}
 #auth button{width:100%;margin-top:7px}
-.message{font-size:13px;color:#555;margin-top:10px;white-space:pre-wrap}
-nav{position:fixed;bottom:0;left:0;right:0;background:white;border-top:1px solid #ddd;display:flex;justify-content:center;z-index:20;padding:6px 3px calc(6px + env(safe-area-inset-bottom))}
-nav button{flex:1;max-width:135px;background:transparent;color:#555;padding:10px 2px;font-size:12px}
-nav button.active{color:#000;background:#eee}
-.avatar{width:76px;height:76px;border-radius:50%;object-fit:cover;background:#eee}
+.message{font-size:13px;color:#a8a1ff;margin-top:10px;white-space:pre-wrap}
+nav{position:fixed;bottom:0;left:0;right:0;background:#090912;border-top:1px solid var(--border);display:flex;justify-content:center;z-index:20;padding:6px 3px calc(6px + env(safe-area-inset-bottom))}
+nav button{flex:1;max-width:135px;background:transparent;color:#9292aa;padding:10px 2px;font-size:12px}
+nav button.active{color:#fff;background:#25213d;box-shadow:inset 0 -2px #8d64ff}
+.avatar{width:76px;height:76px;border-radius:50%;object-fit:cover;background:#222}
 .post-head{display:flex;align-items:center;gap:11px;margin-bottom:13px}
-.post-avatar{width:43px;height:43px;border-radius:50%;object-fit:cover;background:#eee}
+.post-avatar{width:43px;height:43px;border-radius:50%;object-fit:cover;background:#222}
 .post-head .who{flex:1;min-width:0}
-.post-media{width:100%;max-height:650px;object-fit:contain;background:#111;border-radius:9px;margin-top:10px}
+.post-media{width:100%;max-height:650px;object-fit:contain;background:#050509;border-radius:10px;margin-top:10px}
 .post-text{white-space:pre-wrap;line-height:1.5;margin:10px 0}
 .post-actions{display:flex;gap:9px;align-items:center;margin-top:12px;flex-wrap:wrap}
 .post-actions button{padding:8px 11px;font-size:13px}
-.post-date{font-size:11px;color:#999;margin-top:12px}
+.post-date{font-size:11px;color:#777;margin-top:12px}
 .profile{text-align:center}
 .profile-stats{display:flex;justify-content:center;gap:32px;margin:18px 0}
 .profile-stats div{text-align:center}
-.profile-stats strong{display:block;font-size:19px}
-.profile-stats span{font-size:12px;color:#888}
+.profile-stats strong{display:block;font-size:19px;color:#b9a1ff}
+.profile-stats span{font-size:12px;color:var(--muted)}
 .profile-actions{display:flex;justify-content:center;gap:8px;flex-wrap:wrap}
-.user-row{display:flex;align-items:center;gap:11px;padding:12px 0;border-bottom:1px solid #eee}
+.user-row{display:flex;align-items:center;gap:11px;padding:12px 0;border-bottom:1px solid var(--border)}
 .user-row:last-child{border:0}
 .user-row img{width:48px;height:48px;border-radius:50%;object-fit:cover}
 .user-row .info{flex:1;min-width:0}
 .user-row .info strong{display:block}
-.user-row .info span{font-size:12px;color:#888}
+.user-row .info span{font-size:12px;color:var(--muted)}
 .user-row button{font-size:12px;padding:9px}
-.comments{background:#fafafa;border-radius:9px;padding:10px;margin-top:10px}
-.comment-row{font-size:13px;padding:7px 0;border-bottom:1px solid #eee}
+.comments{background:#090912;border-radius:10px;padding:10px;margin-top:10px}
+.comment-row{font-size:13px;padding:7px 0;border-bottom:1px solid var(--border)}
 .comment-row:last-child{border:0}
 .comment-form{display:flex;gap:6px;margin-top:8px}
 .comment-form input{margin:0;min-width:0}
 .comment-form button{padding:8px 11px}
 .chat-layout{display:grid;gap:10px}
-.chat-box{border:1px solid #eee;border-radius:10px;padding:12px;min-height:220px;max-height:420px;overflow:auto;background:#fafafa}
+.chat-box{border:1px solid var(--border);border-radius:10px;padding:12px;min-height:220px;max-height:420px;overflow:auto;background:#090912}
 .bubble{padding:10px 12px;border-radius:13px;margin:8px 0;max-width:85%;font-size:14px;white-space:pre-wrap;overflow-wrap:anywhere}
-.bubble.mine{background:#111;color:white;margin-left:auto}
-.bubble.theirs{background:#e9e9e9;color:#111}
+.bubble.mine{background:linear-gradient(110deg,#287bff,#8246dc);color:white;margin-left:auto}
+.bubble.theirs{background:#252538;color:#eee}
 .bubble small{display:block;font-size:10px;opacity:.65;margin-top:5px}
 .chat-send{display:flex;gap:7px;margin-top:8px}
 .chat-send input{margin:0;min-width:0}
 .chat-send button{white-space:nowrap}
-.notice{padding:12px 0;border-bottom:1px solid #eee;display:flex;gap:10px;align-items:center;font-size:13px}
+.notice{padding:12px 0;border-bottom:1px solid var(--border);display:flex;gap:10px;align-items:center;font-size:13px}
 .notice:last-child{border:0}
-.dot{width:8px;height:8px;border-radius:50%;background:#111;flex-shrink:0}
-.empty{text-align:center;padding:24px;color:#888;font-size:14px}
-footer{text-align:center;color:#999;font-size:11px;padding:15px}
-@media(min-width:700px){.container{padding-bottom:35px}nav{position:sticky;bottom:0;border:1px solid #ddd;border-radius:12px;margin:0 auto 15px;max-width:680px}}
+.dot{width:8px;height:8px;border-radius:50%;background:#8d63ff;flex-shrink:0}
+.empty{text-align:center;padding:24px;color:var(--muted);font-size:14px}
+footer{text-align:center;color:#68687c;font-size:11px;padding:15px}
+@media(min-width:700px){.container{padding-bottom:35px}nav{position:sticky;bottom:0;border:1px solid var(--border);border-radius:12px;margin:0 auto 15px;max-width:680px}}
 </style>
 </head>
 <body>
 
 <header>
-<div class="logo"><span>V</span> VEXORA</div>
-<div class="header-right">YOUR SOCIAL WORLD</div>
+<div class="logo">WIV<span class="logo-a">A</span></div>
+<div class="header-right">YOUR WORLD. YOUR WIVA.</div>
 </header>
 
 <div class="container">
 
 <section id="auth" class="card">
-<h2>VEXORA'ya Hoş Geldin</h2>
+<h2>WIVA'ya Hoş Geldin</h2>
 <p class="small">Sosyal dünyana katıl.</p>
 <input id="fullName" placeholder="Adın ve soyadın">
 <input id="userName" placeholder="Kullanıcı adın">
@@ -205,7 +207,7 @@ footer{text-align:center;color:#999;font-size:11px;padding:15px}
 </nav>
 </section>
 </div>
-<footer>© 2026 VEXORA · Your Social World</footer>
+<footer>© 2026 WIVA · Your World</footer>
 
 <script>
 const SUPABASE_URL="https://coyobsmidxswejusrnca.supabase.co";
@@ -217,7 +219,7 @@ let myProfile=null;
 let users=[];
 let activeChat=null;
 let chatTimer=null;
-const placeholder="https://placehold.co/150x150/f0f0f0/333?text=V";
+const placeholder="https://placehold.co/150x150/171725/aaa?text=W";
 
 function el(id){return document.getElementById(id)}
 function msg(id,t){if(el(id))el(id).textContent=t}
@@ -267,7 +269,7 @@ const {data,error}=await db.from("profiles").select("*").eq("id",me.id).maybeSin
 if(error){msg("profileMsg",error.message);return}
 myProfile=data;
 if(!data)return;
-el("myName").textContent=data.full_name||"VEXORA";
+el("myName").textContent=data.full_name||"WIVA";
 el("myUsername").textContent="@"+(data.username||"");
 el("myBio").textContent=data.bio||"";
 el("myAvatar").src=data.avatar_url||placeholder;
@@ -369,7 +371,7 @@ if(p.video_url)media=`<video class="post-media" controls playsinline src="${esc(
 return `<article class="post">
 <div class="post-head">
 <img class="post-avatar" src="${avatar(user)}" alt="">
-<div class="who"><strong>${esc(user.full_name||"VEXORA kullanıcısı")}</strong><div class="small">@${esc(user.username||"")}</div></div>
+<div class="who"><strong>${esc(user.full_name||"WIVA kullanıcısı")}</strong><div class="small">@${esc(user.username||"")}</div></div>
 </div>
 ${p.content?`<div class="post-text">${esc(p.content)}</div>`:""}
 ${media}
@@ -485,7 +487,7 @@ ${id!==me.id?`<button id="followBtn" onclick="toggleFollow('${id}')">${isFollowi
 <button class="light" onclick="el('userDetail').innerHTML=''">Kapat</button>
 </div></div><div id="otherPosts"></div>`;
 if(posts.error){el("otherPosts").textContent=posts.error.message;return}
-await renderPosts(posts.data||{length:0}, {[id]:u}, el("otherPosts"));
+await renderPosts(posts.data||[], {[id]:u}, el("otherPosts"));
 }
 
 async function toggleFollow(id){
