@@ -16,9 +16,60 @@ button:disabled{opacity:.5;cursor:not-allowed}
 button.light{background:#242438;color:#eee}
 button.outline{background:transparent;color:#eee;border:1px solid var(--border)}
 header{height:68px;background:#080810;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;padding:0 max(16px,calc((100% - 950px)/2));position:sticky;top:0;z-index:10}
-.logo{font-size:28px;font-weight:950;letter-spacing:4px;color:#fff;text-shadow:0 0 15px #487dff}
-.logo-a{position:relative;display:inline-block;color:#fff}
-.logo-a:after{content:"";position:absolute;width:8px;height:8px;border-radius:50%;background:#a66aff;box-shadow:0 0 8px #8b5cff,0 0 15px #38bdf8;left:50%;top:48%;transform:translate(-50%,-50%)}
+
+/* WIVA KROM + MOR KURE + NEON YORUNGE LOGOSU */
+.logo{
+position:relative;
+display:inline-flex;
+align-items:center;
+font-size:32px;
+font-weight:950;
+letter-spacing:3px;
+line-height:1;
+color:#e8e8f5;
+background:linear-gradient(180deg,#fff 0%,#bfc2d3 22%,#fff 40%,#73778d 58%,#f5f5ff 76%,#8c91a8 100%);
+-webkit-background-clip:text;
+background-clip:text;
+-webkit-text-fill-color:transparent;
+filter:drop-shadow(0 0 5px #8b5cff88);
+user-select:none;
+}
+.logo-a{
+position:relative;
+display:inline-block;
+margin-left:1px;
+color:#fff;
+background:linear-gradient(180deg,#fff 0%,#c5c8dc 28%,#fff 48%,#73778d 70%,#fff 100%);
+-webkit-background-clip:text;
+background-clip:text;
+-webkit-text-fill-color:transparent;
+}
+.logo-orb{
+position:absolute;
+width:13px;
+height:13px;
+left:50%;
+top:58%;
+transform:translate(-50%,-50%);
+border-radius:50%;
+background:radial-gradient(circle at 35% 28%,#fff 0%,#e8caff 9%,#b45cff 28%,#7122e8 58%,#26065e 100%);
+box-shadow:0 0 5px #fff,0 0 12px #a34dff,0 0 21px #782cff;
+z-index:2;
+-webkit-text-fill-color:initial;
+}
+.logo-orbit{
+position:absolute;
+width:31px;
+height:12px;
+left:50%;
+top:58%;
+transform:translate(-50%,-50%) rotate(-24deg);
+border:1.5px solid #c66cff;
+border-radius:50%;
+box-shadow:0 0 7px #8b35ff,0 0 12px #4b9dff;
+z-index:3;
+pointer-events:none;
+}
 .header-right{font-size:11px;color:#aaa8d0;letter-spacing:2px}
 .container{max-width:680px;margin:20px auto;padding:0 12px 95px}
 .card,.post{background:var(--panel);border:1px solid var(--border);border-radius:16px;padding:17px;margin-bottom:14px;box-shadow:0 5px 25px #0005}
@@ -82,13 +133,21 @@ nav button.active{color:#fff;background:#25213d;box-shadow:inset 0 -2px #8d64ff}
 .dot{width:8px;height:8px;border-radius:50%;background:#8d63ff;flex-shrink:0}
 .empty{text-align:center;padding:24px;color:var(--muted);font-size:14px}
 footer{text-align:center;color:#68687c;font-size:11px;padding:15px}
+@media(max-width:480px){
+.logo{font-size:27px;letter-spacing:2px}
+.logo-orb{width:11px;height:11px}
+.logo-orbit{width:27px;height:10px}
+.header-right{font-size:9px;letter-spacing:1px}
+}
 @media(min-width:700px){.container{padding-bottom:35px}nav{position:sticky;bottom:0;border:1px solid var(--border);border-radius:12px;margin:0 auto 15px;max-width:680px}}
 </style>
 </head>
 <body>
 
 <header>
-<div class="logo">WIV<span class="logo-a">A</span></div>
+<div class="logo" aria-label="WIVA">
+WIV<span class="logo-a">A<span class="logo-orb"></span><span class="logo-orbit"></span></span>
+</div>
 <div class="header-right">YOUR WORLD. YOUR WIVA.</div>
 </header>
 
